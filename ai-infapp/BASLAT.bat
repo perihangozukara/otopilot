@@ -13,7 +13,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-rem Port: AI_INFAPP_PORT, yoksa AIINFAPP_PORT (youtube-otomasyon paneliyle ayni ad), yoksa 4200.
+rem Port: AI_INFAPP_PORT, yoksa AIINFAPP_PORT (otopilot paneliyle ayni ad), yoksa 4200.
 rem Her durumda AI_INFAPP_PORT olarak verilir: sunucu da tarayici da ayni portu kullanir (eski PORT degiskeni karismaz).
 if not defined AI_INFAPP_PORT set "AI_INFAPP_PORT=%AIINFAPP_PORT%"
 if not defined AI_INFAPP_PORT set "AI_INFAPP_PORT=4200"

@@ -20,7 +20,7 @@ kendin seç. Yalnızca kılavuzun "kullanıcıya sor" dediği yerlerde ya da kon
 node -v                       # en az 22 olmalı; değilse kullanıcıya söyle
 node ff-yol.js                # ffmpeg bulunamazsa 0 dışı çıkış kodu verir
 npm ci --ignore-scripts       # paketler (node_modules yoksa)
-npm run egitim                # eğitim PDF'lerini masaüstündeki "Otomasyon Eğitim" klasörüne kopyalar (eksikleri; var olana dokunmaz)
+npm run egitim                # eğitim PDF'lerini masaüstündeki "Otopilot Eğitim" klasörüne kopyalar (eksikleri; var olana dokunmaz)
 ```
 
 **Eğitim PDF'leri:** depoda `egitim/` içinde 4 eğitim PDF'i var: YouTube içerik üretimi (seri 1), Instagram büyüme yol haritası,

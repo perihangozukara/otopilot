@@ -7,7 +7,7 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 
-# Port: AI_INFAPP_PORT, yoksa AIINFAPP_PORT (youtube-otomasyon paneliyle ayni ad), yoksa 4200.
+# Port: AI_INFAPP_PORT, yoksa AIINFAPP_PORT (otopilot paneliyle ayni ad), yoksa 4200.
 # Her durumda AI_INFAPP_PORT olarak verilir: sunucu da tarayici da ayni portu kullanir (eski PORT degiskeni karismaz).
 AI_INFAPP_PORT="${AI_INFAPP_PORT:-${AIINFAPP_PORT:-4200}}"
 export AI_INFAPP_PORT

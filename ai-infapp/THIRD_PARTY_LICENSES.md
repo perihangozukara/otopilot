@@ -1,7 +1,7 @@
 # Third-Party Licenses
 
 Ai Infapp bundles a filtered, transformed subset of a third-party prompt library.
-This notice covers the `ai-infapp/` folder of the youtube-otomasyon repository; the rest of the
+This notice covers the `ai-infapp/` folder of the otopilot repository; the rest of the
 repository does not use or redistribute this data. Keep this file with `ai-infapp/` if you copy the folder elsewhere.
 
 ## AI Image Prompts (`ai-image-prompts-skill`)

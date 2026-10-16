@@ -26,7 +26,7 @@ test("egitim/ klasöründeki her PDF listede, listedeki her PDF depoda; hepsi ge
   assert.ok(gorunen.every((g) => g.endsWith(".pdf")));
 });
 
-test("kopyala: masaüstünde 'Otomasyon Eğitim' klasörü açar, dört PDF'i koyar; ikinci çalıştırma yeniden kopyalamaz", () => {
+test("kopyala: masaüstünde 'Otopilot Eğitim' klasörü açar, dört PDF'i koyar; ikinci çalıştırma yeniden kopyalamaz", () => {
   const masaustu = gecici();
   try {
     const bir = egitim.kopyala({ masaustu, isaret: null });

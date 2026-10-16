@@ -1,4 +1,4 @@
-# Otomasyon Paneli — konudan bitmiş videoya
+# Otopilot — konudan bitmiş videoya
 
 > **Claude Code ya da Codex ile kullanacaksan:** depoyu klasör olarak aç, ajanı başlat, isteğini yaz ("şu konuda 40 saniyelik Shorts yap", "bir fitness influencer yarat ve 3 foto üret"). [`AGENTS.md`](AGENTS.md) (Claude Code için `CLAUDE.md` üzerinden) kendiliğinden okunur; ajan kurulumu, komutları ve akışı oradan bilir, sana tekrar sormaz.
 
@@ -42,13 +42,13 @@ bitmiş MP4 + SRT + kapak (JPG) + YAYIN-PAKETI.md (başlık, açıklama, bölüm
 **Windows:** depoyu indir, **PANEL.bat**'a çift tıkla. Node.js (en az 22), ffmpeg ve paketler eksikse kurulur — **sistem yazılımı kurmadan önce sana sorar** (E/H). Panel aynı pencerede çalışır; beklenmedik kapanırsa 3 sn sonra kendini yeniden başlatır. Tarayıcı, sunucu gerçekten cevap verince bir kez açılır.
 
 ```bash
-git clone https://github.com/wj-sidiss/youtube-otomasyon.git
+git clone https://github.com/wj-sidiss/otopilot.git
 ```
 
 **Mac / Linux (deneysel):** kod `process.platform`'a göre font ve klasör açma komutunu seçer, ama Windows dışında yeterince denenmedi.
 
 ```bash
-cd youtube-otomasyon
+cd otopilot
 npm ci --ignore-scripts
 node panel.js
 ```
@@ -59,7 +59,7 @@ Paketler `package-lock.json` ile sabitlenmiştir (`npm ci` herkese aynı sürüm
 
 ## Eğitim PDF'leri
 
-`egitim/` klasöründe dört eğitim PDF'i var: YouTube içerik üretimi (seri 1), Instagram büyüme yol haritası, TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi. Panel terminalde ilk kez açılınca bunları masaüstünde **Otomasyon Eğitim** klasörüne kendisi kopyalar (var olan dosyaya dokunmaz). Elle: `npm run egitim`.
+`egitim/` klasöründe dört eğitim PDF'i var: YouTube içerik üretimi (seri 1), Instagram büyüme yol haritası, TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi. Panel terminalde ilk kez açılınca bunları masaüstünde **Otopilot Eğitim** klasörüne kendisi kopyalar (var olan dosyaya dokunmaz). Elle: `npm run egitim`.
 
 ## Anahtarlar
 

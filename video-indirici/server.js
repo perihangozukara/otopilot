@@ -1283,12 +1283,12 @@ async function istekIsle(req, res) {
     const ortak = otomasyonLib('ortak'), vidiq = otomasyonLib('vidiq');
     if (!ortak || !vidiq) {
       return hataYaz(res, 500, 'bilesen_yok', 'vidIQ yenileme bileşeni (lib/vidiq.js) bulunamadı.',
-        'İndirici, youtube-otomasyon klasörünün içindeki video-indirici/ olarak çalışmalı. Liste boş kalır; indirme ve arama çalışmaya devam eder.');
+        'İndirici, otopilot klasörünün içindeki video-indirici/ olarak çalışmalı. Liste boş kalır; indirme ve arama çalışmaya devam eder.');
     }
     const anahtar = ortak.envOku('VIDIQ_KEY');
     if (!anahtar) {
       return hataYaz(res, 400, 'anahtar_yok',
-        'VIDIQ_KEY girilmemiş. Otomasyon panelinin Anahtarlar ekranından ekle (anahtar: app.vidiq.com/account/settings/mcp).',
+        'VIDIQ_KEY girilmemiş. Otopilot panelinin Anahtarlar ekranından ekle (anahtar: app.vidiq.com/account/settings/mcp).',
         'Liste, anahtar girilip tazeleninceye kadar boş kalır; indirme ve arama çalışır.');
     }
     if (yenileniyor) return hataYaz(res, 409, 'mesgul', 'Liste zaten yenileniyor.', 'Bitmesini bekle (yaklaşık 30 sn).');

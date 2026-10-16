@@ -434,7 +434,7 @@
     kokler[ad].hidden = false; aktif = ad;
     kayit[ad].ac(r.parcalar);
     P.$$("#menu button").forEach(function (b) { if (b.dataset.g === ad) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
-    document.title = kayit[ad].baslik + " — Otomasyon Paneli";
+    document.title = kayit[ad].baslik + " — Otopilot";
     if (odak && degisti) {
       var hedef = kayit[ad].odak ? kayit[ad].odak(r.parcalar) : P.$("h1", kokler[ad]);
       if (hedef) hedef.focus({ preventScroll: true });

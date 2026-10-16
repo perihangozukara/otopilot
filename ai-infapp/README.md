@@ -37,18 +37,18 @@ Aşağıdakilerin **yalnızca ilk ikisi zorunlu.** Gerisi ne yapmak istediğine 
 
 ### 1. Çalıştır (zorunlu, 1 dakika)
 
-Ai Infapp, [youtube-otomasyon](https://github.com/wj-sidiss/youtube-otomasyon) deposunun `ai-infapp/`
+Ai Infapp, [otopilot](https://github.com/wj-sidiss/otopilot) deposunun `ai-infapp/`
 klasörüdür; kendi başına çalışır (bu klasör için `npm install` gerekmez).
 
 ```bash
-git clone https://github.com/wj-sidiss/youtube-otomasyon.git
-cd youtube-otomasyon/ai-infapp
+git clone https://github.com/wj-sidiss/otopilot.git
+cd otopilot/ai-infapp
 ```
 
 Windows'ta `BASLAT.bat` dosyasına çift tıkla. macOS / Linux'ta `bash baslat.sh`.
 Panel: **http://localhost:4200** — `npm install` yok, kurulum yok.
 
-youtube-otomasyon panelini zaten kullanıyorsan başlatmak daha da kolay: panelde
+otopilot panelini zaten kullanıyorsan başlatmak daha da kolay: panelde
 **Araçlar → Ai Infapp** düğmesine bas; panel sunucuyu başlatır ve
 ayrı bir pencerede açar. Port'u değiştirmek istersen `AIINFAPP_PORT` ortam değişkenini ver:
 panel ve `BASLAT.bat` / `baslat.sh` aynı değişkeni okur.
@@ -205,7 +205,7 @@ Panel: **http://localhost:4200** (kurulum sırası için yukarı bak)
 > `Host` adı denetlenir (DNS rebinding'e karşı); yazma isteklerinde `Origin` / `Sec-Fetch-Site` aynı
 > kaynaktan olmalı, API yazmaları `application/json` olmalıdır. Yani başka bir web sitesi, tarayıcında
 > açıkken karakterini silemez ya da görsel üretim adresini kendi sunucusuna çeviremez.
-> youtube-otomasyon panelindeki oturum jetonu burada **yoktur**: aynı bilgisayarda çalışan başka bir
+> otopilot panelindeki oturum jetonu burada **yoktur**: aynı bilgisayarda çalışan başka bir
 > *program* sunucuya doğrudan istek atabilir. Koruma tarayıcı tabanlı saldırılara karşıdır; bilgisayara
 > zararlı bir program girdiyse Ai Infapp koruyamaz.
 
@@ -572,7 +572,7 @@ Ayrıca `src/scenes.js` ışık havuzu aynı kaynaktan **8'den 40'a** çıkarıl
 node test/kutuphane.test.js
 ```
 
-(youtube-otomasyon kökünden: `npm run test:aiinfapp`; `npm test` bunu panel ve video-indirici
+(otopilot kökünden: `npm run test:aiinfapp`; `npm test` bunu panel ve video-indirici
 testleriyle birlikte koşar.)
 
 Altı kapı: kimlik izi, negatif çarpışması, görsel bağlantısı, gerçek karakterle
@@ -788,5 +788,5 @@ location, pose and framing. For genuinely indistinguishable results connect **Re
 **fal.ai** or local **Stable Diffusion** (RealVisXL / epiCRealism) — these also accept reference images,
 which is what actually locks the face across angles.
 
-`node server.js` → `http://localhost:4200` (or the **Ai Infapp** button in the youtube-otomasyon panel; this
+`node server.js` → `http://localhost:4200` (or the **Ai Infapp** button in the otopilot panel; this
 folder is `ai-infapp/` of that repository). Needs Node.js 22+. Reset with `node reset.js --confirm`. MIT.

@@ -9,7 +9,7 @@ Link yapıştır → indir. YouTube, TikTok, X (Twitter), Instagram, Facebook, R
 
 ## Hangi kopya?
 
-**Kanonik kopya bu klasördür** (`youtube-otomasyon/video-indirici/`). Otomasyon panelinin
+**Kanonik kopya bu klasördür** (`otopilot/video-indirici/`). Otopilot panelinin
 indirici düğmesi bunu başlatır; hata düzeltmeleri ve güvenlik yamaları yalnızca burada yapılır.
 Bu depo dışında duran eski bir `video-indirici` klasörü (kendi `ayarlar.json` ve
 `indirilenler/` klasörleriyle) **eski ve güncellenmeyen** bir nüshadır; kullanma.

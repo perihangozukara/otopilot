@@ -3,7 +3,7 @@
 /**
  * AI INFAPP - yerel panel sunucusu
  *
- * Sifir bagimlilik. Node 22+ (youtube-otomasyon deposunun ortak kurali).
+ * Sifir bagimlilik. Node 22+ (otopilot deposunun ortak kurali).
  *
  * ONEMLI: Bu otomasyon KENDI BASINA GORSEL URETMEZ ve stok gorsel kullanmaz.
  * Gorselin geldigi tek yer, kullanicinin Ayarlar bolumunden bagladigi
@@ -32,7 +32,7 @@ const upscalers = require('./src/upscalers');
 const studios = require('./src/studios');
 const kutuphane = require('./src/kutuphane');
 
-// Panel (youtube-otomasyon) bu sunucuyu AI_INFAPP_PORT ile baslatir; eski PORT degiskeni de calisir.
+// Panel (otopilot) bu sunucuyu AI_INFAPP_PORT ile baslatir; eski PORT degiskeni de calisir.
 const PORT = Number(process.env.AI_INFAPP_PORT || process.env.PORT || 4200);
 // Her yanita konan kimlik basligi: panel, 4200 portunda KIMIN dinledigini bununla ayirir (eski, korumasiz kopya bu basligi tasimaz).
 const KIMLIK = 'ai-infapp/' + require('./package.json').version;

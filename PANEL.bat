@@ -1,12 +1,12 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-title Otomasyon Paneli
+title Otopilot
 setlocal enabledelayedexpansion
 
 echo.
 echo   ============================================
-echo    OTOMASYON PANELI
+echo    OTOPILOT
 echo   ============================================
 echo.
 

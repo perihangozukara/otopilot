@@ -520,7 +520,7 @@ function basla() {
     calistirici.baslangicTaramasi();
     kuyruk.yukle();
     console.log("\n  ============================================");
-    console.log("   YOUTUBE OTOMASYON PANELI");
+    console.log("   OTOPILOT");
     console.log("  ============================================\n");
     console.log("   Panel : http://localhost:" + PORT);
     console.log("   Video indirici ayrı çalışır: panelden \"Video indirici\" düğmesiyle başlat (http://localhost:" + INDIRICI_PORT + ").");

@@ -33,12 +33,13 @@ Ayrı bir proje olan **Ai Infapp** (AI influencer, fotoroman, Etsy baskı tasar�
 - Ai Infapp başsız Chrome'u (PNG/PDF/glif ölçümü) artık sayfadaki içeriğin ağa çıkmasına hiç izin vermez: Chrome'a verilen HTML bir içerik politikası (CSP: `connect-src 'none'`, çizilen SVG'de betik yok, yalnız `data:`/`file:` görsel) taşır. Eskiden bunu yalnızca ölü bir vekil (`127.0.0.1:9`) sağlıyordu; çalıştırıcıda o vekil bazen cevapsız kalıp sayfa yükünü 120 sn bekletiyor, Node 22/24 işlerinden biri rastgele düşüyordu. Artık ağ istediği başlamadığı için bekleme olmaz. Vekil bayrakları ek katman olarak durur. Politika Chrome çalıştırılmadan test edilir.
 
 ### Eğitim PDF'leri (16 Eki)
-- `egitim/` içinde dört eğitim PDF'i (YouTube içerik üretimi seri 1, Instagram büyüme yol haritası, TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi). `lib/egitim.js` bunları masaüstündeki **Otomasyon Eğitim** klasörüne kopyalar: panel terminalde açılınca bir kez kendiliğinden, ya da `npm run egitim` ile elle. Var olan dosyanın üstüne yazmaz, masaüstü yoksa sessizce atlar; test, CI ve arka plan çalışmalarında masaüstüne dokunmaz.
+- `egitim/` içinde dört eğitim PDF'i (YouTube içerik üretimi seri 1, Instagram büyüme yol haritası, TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi). `lib/egitim.js` bunları masaüstündeki **Otopilot Eğitim** klasörüne kopyalar: panel terminalde açılınca bir kez kendiliğinden, ya da `npm run egitim` ile elle. Var olan dosyanın üstüne yazmaz, masaüstü yoksa sessizce atlar; test, CI ve arka plan çalışmalarında masaüstüne dokunmaz.
 
 ### Ajan kullanımı ve son kontroller (16 Eki)
 - **`AGENTS.md` + `CLAUDE.md`.** Depoyu Claude Code ya da Codex ile açan ajan, kurulumu, komutları ve akışı (YouTube videosu, AI influencer) oturum başında kendiliğinden okur; kullanıcıya "nasıl yapalım" diye sormaz. İçindeki komutlar gerçek bir iş üzerinde denendi (konu → senaryo → görsel → ses → 1080×1920 MP4, kapak, yayın paketi; karakter → sahne → prompt → görsel → paylaşım metni).
 - **Seslendirme 403 veriyordu.** Microsoft'un ücretsiz Edge sesi eski `msedge-tts` sürümünü reddediyordu; 2.1.0'a yükseltildi, seslendirme yeniden çalışıyor (`npm audit` 0).
 - **Ai Infapp görsel üretimi `402` veriyordu.** Pollinations anonim kullanımda aralıklı "ödeme gerekli" döner; artık otomatik tekrar denenir ve hata mesajına resmin ikili verisi basılmaz.
+- **Proje adı Otopilot.** Repo `otopilot` oldu (eski `youtube-otomasyon` adresi yeni adrese yönlenir), panel başlığı ve belgeler Otopilot'a döndü, paket adı `otopilot`; masaüstü eğitim klasörü **Otopilot Eğitim**. Proje YouTube ile sınırlı değil: YouTube, Shorts, Reels, TikTok, AI influencer, video indirme ve edit.
 - **Ad.** Stüdyonun adı Ai Infapp oldu: klasör `ai-infapp/`, ortam değişkenleri `AI_INFAPP_*` (sunucu) ve `AIINFAPP_PORT` (panel), kimlik başlığı `X-Ai-Infapp`.
 
 ### Düzeltilenler (son denetim turu)

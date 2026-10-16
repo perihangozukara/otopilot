@@ -224,7 +224,7 @@ function sirTara(metin) {
 }
 
 test("sir taramasinin kendisi: gercek gibi anahtarlari yakalar, yer tutuculari ve belge ornegini yakalamaz", () => {
-  const rastgele = n => crypto.randomBytes(n).toString("base64url");
+  const rastgele = n => crypto.randomBytes(n).toString("base64url") + "a7";   // en az bir harf ve bir rakam garanti: rastgele dizi nadiren rakamsiz cikip testi dalgalandiriyordu
   assert.equal(sirTara("anahtar = " + "sk-ant-" + "api03-" + rastgele(40)).length, 1);
   assert.equal(sirTara("PEXELS_KEY=" + rastgele(30)).length, 1);
   assert.equal(sirTara("ANTHROPIC_API_KEY=" + "sk-ant-" + rastgele(30)).length >= 1, true);
