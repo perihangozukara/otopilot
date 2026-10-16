@@ -1,0 +1,84 @@
+# API anahtarlari — ASLA yuklenmez
+.env
+.env.*
+!.env.ornek
+
+# uretim ciktilari (gorseller, sesler, videolar — cok buyuk)
+uretim/
+onizleme/
+*.mp4
+*.mp3
+*.srt
+*.jpg
+*.jpeg
+*.png
+
+# node
+# NOT: package-lock.json depoya GIRER (herkes ayni surumleri kursun; PANEL.bat "npm ci" kullanir)
+node_modules/
+
+# panel yerel ayarlari
+panel-ayar.json
+panel-ayar.json.bozuk-*
+# (uretim/ altindaki _log/, _kuyruk.json, _arsiv/ zaten yukaridaki uretim/ kuraliyla disarida)
+
+# windows
+Thumbs.db
+desktop.ini
+tmp-test/
+*.wav
+
+# --- KISISEL IS BELGELERI: public depoya girmez ---
+# Kanal stratejisi, icerik fikirleri, yukleme metinleri, X thread'leri.
+# Bunlar kullanicinin is materyali; arac degil.
+KANAL-ACILIS-KITI.md
+STRATEJI.md
+MIMARI-VE-KURULUM-PLANI.md
+X-THREAD-*.md
+YUKLEME-*.md
+fikir-havuzu.md
+muzik/
+videolar/
+# tek seferlik render scriptleri (belirli islere ozel)
+gece-render.sh
+ikinci-gecis.sh
+logo-uret.sh
+muzik-duzelt.sh
+yeni-render.sh
+
+# --- Repo kapsami: SADECE YouTube + Instagram video uretimi ---
+# Asagidakiler bu makinede duruyor ama depoya girmiyor.
+# DJ mix araclari (ayri bir is):
+mix-pro.js
+mix-video.js
+mix-yap.js
+muzik-analiz.js
+ton-analiz.js
+# X thread gorsel ureteci:
+thread-gorsel.js
+# Eski panel (panel.js + panel-public tarafindan degistirildi):
+# NOT: "/" ile koke sabitli — video-indirici/ altindaki ayni adli dosyalari kapsamaz.
+/server.js
+/public/
+/templates/
+/BASLAT.bat
+/viral-analiz/
+
+# --- Video Indirici modulu (video-indirici/) ---
+# kod depoya girer; indirilen videolar ve yerel ayarlar girmez
+video-indirici/indirilenler/
+video-indirici/ayarlar.json
+video-indirici/log/
+trend/
+
+# --- Ai Infapp modulu (ai-infapp/) ---
+# kod depoya girer; karakter, API anahtarlari, uretilen gorseller ve calisan sunucunun kilit dosyasi girmez
+# (ai-infapp/.gitignore ayni seyi yapar; burasi kemer ustune kusak)
+ai-infapp/data/
+ai-infapp/node_modules/
+ai-infapp/.instance
+ai-infapp/.env
+ai-infapp/.env.*
+ai-infapp/*.log
+# vidIQ verisinden uretilen canli akis (3. taraf verisi: depoda paylasilmaz; "vidIQ'dan tazele" ile olusur)
+video-indirici/kesfet-veri.json

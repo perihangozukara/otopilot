@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="panel-token" content="__PANEL_JETON__">
+<title>Video İndirici</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff3b5c' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3Cpath d='M12 15V3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/stil.css">
+</head>
+<body>
+
+<!-- ikon takimi: <use href="#i-ad"> ile kullanilir (emoji yok, her sistemde ayni gorunur) -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-indir" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-oynat" viewBox="0 0 24 24"><path d="M6 3 20 12 6 21Z"/></symbol>
+  <symbol id="i-klasor" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-sil" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-kapat" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-tekrar" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-pano" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="i-muzik" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+  <symbol id="i-yenile" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="i-ates" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-dis" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></symbol>
+  <symbol id="i-ara" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+</svg>
+
+<div class="kap">
+
+  <header>
+    <div class="logo" aria-hidden="true"><svg class="ik"><use href="#i-indir"/></svg></div>
+    <div>
+      <h1>Video İndirici</h1>
+      <div class="altbaslik">YouTube · TikTok · X · Instagram · Reddit — reklamsız, kendi bilgisayarında</div>
+    </div>
+    <div class="rozetler" id="rozetler" aria-live="polite"></div>
+  </header>
+
+  <nav class="sekmeler" role="tablist" aria-label="Bölümler">
+    <button class="sekme aktif" role="tab" id="tab-indir" aria-selected="true" aria-controls="sekme-indir" data-sekme="indir">
+      <svg class="ik"><use href="#i-indir"/></svg>İndir <span class="say" id="say-kuyruk" hidden>0</span>
+    </button>
+    <button class="sekme" role="tab" id="tab-kesfet" aria-selected="false" aria-controls="sekme-kesfet" data-sekme="kesfet" tabindex="-1">
+      <svg class="ik"><use href="#i-ates"/></svg>Keşfet
+    </button>
+  </nav>
+
+  <div class="uyari" id="uyari" role="alert"></div>
+
+<section id="sekme-indir" role="tabpanel" aria-labelledby="tab-indir">
+
+  <div class="kutu">
+    <label class="gizli-etiket" for="link">İndirilecek linkler</label>
+    <textarea id="link" placeholder="Linki buraya yapıştır&#10;(birden fazla linki alt alta yazabilirsin)" spellcheck="false"></textarea>
+
+    <div class="satir" role="group" aria-label="Kalite">
+      <button class="cip" data-kalite="en-iyi" aria-pressed="false">En iyi</button>
+      <button class="cip" data-kalite="2160" aria-pressed="false">4K</button>
+      <button class="cip" data-kalite="1440" aria-pressed="false">1440p</button>
+      <button class="cip" data-kalite="1080" aria-pressed="false">1080p</button>
+      <button class="cip" data-kalite="720" aria-pressed="false">720p</button>
+      <button class="cip" data-kalite="480" aria-pressed="false">480p</button>
+      <button class="cip" data-kalite="mp3" aria-pressed="false"><svg class="ik"><use href="#i-muzik"/></svg>MP3</button>
+    </div>
+
+    <div class="satir">
+      <button class="dugme" id="indir">İndir</button>
+      <button class="dugme ikincil" id="yapistir"><svg class="ik"><use href="#i-pano"/></svg>Yapıştır &amp; indir</button>
+      <label class="onay"><input type="checkbox" id="liste"> Oynatma listesinin tamamı</label>
+      <label class="onay"><input type="checkbox" id="cerez"> Chrome çerezleri <span class="soluk">(gizli/yaş sınırlı)</span></label>
+    </div>
+
+    <div class="ipucu">
+      <b>Kısayol:</b> linki yapıştır → <b>Ctrl + Enter</b> ile indir. Dosyalar
+      <button type="button" class="yol-dugme" id="klasor-yolu" title="Klasörü aç"></button> klasörüne iner.
+    </div>
+    <div class="telif">
+      Yalnızca <b>kendi içeriğini</b> ya da indirme ve yeniden kullanım izni olan içeriği indir.
+      Başkasının videosunu izinsiz yeniden yüklemek telif ihlalidir; kanalın kapatılabilir.
+    </div>
+  </div>
+
+  <div class="bolum-bas">
+    <h2>İndirme kuyruğu</h2>
+    <div class="sag"><button class="dugme ikincil" id="temizle">Bitenleri temizle</button></div>
+  </div>
+  <div id="isler"></div>
+
+  <div class="bolum-bas">
+    <h2>Klasördeki dosyalar</h2>
+    <div class="sag"><button class="dugme ikincil" id="klasor-ac"><svg class="ik"><use href="#i-klasor"/></svg>Klasörü aç</button></div>
+  </div>
+  <div id="dosyalar"></div>
+
+</section>
+
+<section id="sekme-kesfet" role="tabpanel" aria-labelledby="tab-kesfet" hidden>
+
+  <div class="kutu">
+    <div class="satir ilk" role="group" aria-label="Platform">
+      <span class="etiket">Platform</span>
+      <button class="cip secili" data-plat="hepsi" aria-pressed="true">Hepsi</button>
+      <button class="cip" data-plat="youtube" aria-pressed="false">YouTube</button>
+      <button class="cip" data-plat="tiktok" aria-pressed="false">TikTok</button>
+      <button class="cip" data-plat="instagram" aria-pressed="false">Instagram</button>
+    </div>
+    <div class="satir" role="group" aria-label="En az izlenme">
+      <span class="etiket">En az</span>
+      <button class="cip secili" data-min="0" aria-pressed="true">Hepsi</button>
+      <button class="cip" data-min="1000000" aria-pressed="false">1M+</button>
+      <button class="cip" data-min="5000000" aria-pressed="false">5M+</button>
+      <button class="cip" data-min="10000000" aria-pressed="false">10M+</button>
+      <button class="cip" data-min="30000000" aria-pressed="false">30M+</button>
+    </div>
+    <div class="satir" role="group" aria-label="Kalite">
+      <span class="etiket">Kalite</span>
+      <button class="cip" data-kalite="en-iyi" aria-pressed="false">En iyi</button>
+      <button class="cip" data-kalite="2160" aria-pressed="false">4K</button>
+      <button class="cip" data-kalite="1440" aria-pressed="false">1440p</button>
+      <button class="cip" data-kalite="1080" aria-pressed="false">1080p</button>
+      <button class="cip" data-kalite="720" aria-pressed="false">720p</button>
+      <button class="cip" data-kalite="480" aria-pressed="false">480p</button>
+      <button class="cip" data-kalite="mp3" aria-pressed="false"><svg class="ik"><use href="#i-muzik"/></svg>MP3</button>
+    </div>
+    <div class="satir">
+      <button class="dugme" id="toplu"><svg class="ik"><use href="#i-indir"/></svg>Görünenlerin ilk 10’unu indir</button>
+      <button class="dugme ikincil" id="kesfet-yenile"><svg class="ik"><use href="#i-yenile"/></svg>vidIQ’dan tazele</button>
+      <span class="ipucu bilgi" id="kesfet-bilgi" aria-live="polite"></span>
+    </div>
+    <div class="telif">
+      Bu liste başkalarının videolarını gösterir. İndirmeden önce <b>kullanım iznini</b> kontrol et;
+      izinsiz yeniden yükleme telif ihlalidir.
+    </div>
+  </div>
+
+  <div class="bolum-bas"><h2>Viral akış</h2><div class="sag soluk" id="kesfet-adet"></div></div>
+  <div id="kesfet-liste" class="izgara"><div class="yukleniyor">Yükleniyor…</div></div>
+
+  <div class="bolum-bas"><h2>Kendin ara — canlı YouTube</h2></div>
+  <div class="kutu">
+    <div class="satir ilk">
+      <label class="gizli-etiket" for="arama">Aranacak kelime</label>
+      <input type="text" id="arama" placeholder="örn: haaland meme, kedi, gol, prank" spellcheck="false" maxlength="200">
+      <button class="dugme" id="ara"><svg class="ik"><use href="#i-ara"/></svg>Ara</button>
+    </div>
+    <div class="satir" role="group" aria-label="Arama filtreleri">
+      <span class="etiket">Dönem</span>
+      <button class="cip" data-donem="bugun" aria-pressed="false">Bugün</button>
+      <button class="cip secili" data-donem="hafta" aria-pressed="true">Bu hafta</button>
+      <button class="cip" data-donem="ay" aria-pressed="false">Bu ay</button>
+      <button class="cip" data-donem="hepsi" aria-pressed="false">Tümü</button>
+      <span class="etiket bosluk-sol">Süre</span>
+      <button class="cip secili" data-tur="kisa" aria-pressed="true">Kısa (Shorts)</button>
+      <button class="cip" data-tur="uzun" aria-pressed="false">Uzun</button>
+      <button class="cip" data-tur="hepsi" aria-pressed="false">Hepsi</button>
+    </div>
+    <div class="ipucu">İzlenmeye göre sıralar. Ücretsiz ve sınırsız — vidIQ kredisi harcamaz.</div>
+  </div>
+  <div id="arama-liste" class="izgara"></div>
+
+</section>
+
+</div>
+
+<div id="tost" role="status" aria-live="polite"></div>
+
+<script src="/uygulama.js"></script>
+</body>
+</html>

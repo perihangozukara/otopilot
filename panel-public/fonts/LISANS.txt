@@ -1,0 +1,10 @@
+Bu klasördeki yazı tipleri SIL Open Font License 1.1 (OFL) ile lisanslıdır. Serbestçe kullanılabilir, kopyalanabilir ve
+dağıtılabilir; lisans metni: https://openfontlicense.org
+
+- Hanken Grotesk  (hanken-latin.woff2, hanken-latin-ext.woff2)
+  Copyright The Hanken Grotesk Project Authors (https://github.com/marcologous/hanken-grotesk)
+- Archivo  (archivo-latin.woff2, archivo-latin-ext.woff2)
+  Copyright The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo)
+
+Dosyalar Google Fonts dağıtımından alınan woff2 alt kümeleridir (latin + latin-ext: Türkçe karakterler ç ğ ı ö ş ü İ için ikisi de gerekir).
+Panel yalnız kendi sunucusundan (aynı kaynak) yükler; dış bir yazı tipi servisine istek atılmaz.

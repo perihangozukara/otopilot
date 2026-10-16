@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Otomasyon Paneli</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236FD8FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='4'/%3E%3Cpath d='m10 8 6 4-6 4Z'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/panel-stil.css">
+<!-- Dosya düzeni (hepsi aynı kaynaktan yüklenir, CSP uyumlu; kullanıcı verisi asla innerHTML ile basılmaz):
+     panel-cekirdek.js   DOM yardımcıları, API istemcisi (X-Panel-Token), mesaj/onay bileşenleri, yönlendirme (#/görünüm/iş/sekme)
+     panel-calisma.js    çalışan işler, günlük çubuğu (artan satır numarasıyla), ilerleme, durdur/onayla, sayfa yenilenince yeniden bağlanma
+     panel-isler.js      Videolar: liste, "başlamadan önce" kontrolü, iş sayfası çerçevesi (durum şeridi, uyarılar, sekmeler)
+     panel-yeni.js       Yeni video formu (taslak korunur)
+     panel-is-*.js       iş sekmeleri: üretim, senaryo+ham ayarlar, sahneler, görünüm+ses/dil, yayın
+     panel-toplu.js / panel-trend.js / panel-araclar.js / panel-kanal.js / panel-kaynaklar.js   diğer görünümler
+     panel-baslat.js     başlangıç
+     fonts/              Hanken Grotesk + Archivo (woff2, SIL OFL; lisans: fonts/LISANS.txt), aynı kaynaktan yüklenir -->
+
+</head>
+<body>
+
+<!-- ikon takimi: <use href="#i-ad"> ile kullanilir (emoji yok, her sistemde ayni gorunur) -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-logo" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m10 8 6 4-6 4Z"/></symbol>
+  <symbol id="i-liste" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+  <symbol id="i-katmanlar" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Z"/><path d="m3 13 9 5 9-5"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+  <symbol id="i-arac" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-kanal" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4"/></symbol>
+  <symbol id="i-anahtar" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 8l3 3"/></symbol>
+  <symbol id="i-indir" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-kisi" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.5-4.2 3.4-6.5 7.5-6.5s7 2.3 7.5 6.5"/></symbol>
+  <symbol id="i-ara" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+  <symbol id="i-arti" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-kapat" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-tamam" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-hata" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
+  <symbol id="i-uyari" viewBox="0 0 24 24"><path d="M12 4 2.8 19.5h18.4Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-bilgi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-saat" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-oynat" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5Z"/></symbol>
+  <symbol id="i-durdur" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+  <symbol id="i-duraklat" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+  <symbol id="i-yenile" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+  <symbol id="i-tekrar" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15"/><path d="M4 20v-5h5"/></symbol>
+  <symbol id="i-sil" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  <symbol id="i-kopyala" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-klasor" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+  <symbol id="i-ok-sag" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-sol" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-yukari" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3Z"/></symbol>
+  <symbol id="i-gorsel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 8"/></symbol>
+  <symbol id="i-metin" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-kalem" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13 7 4 4"/></symbol>
+  <symbol id="i-ses" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4Z"/><path d="M16 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-yayin" viewBox="0 0 24 24"><path d="m21 3-9 18-2-8-8-2Z"/></symbol>
+  <symbol id="i-arsiv" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11h14V8M10 12h4"/></symbol>
+  <symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M5 14l2-9h10l2 9M7 17h.01"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m5 8 4 4-4 4M11 17h8"/></symbol>
+  <symbol id="i-yukleniyor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></symbol>
+  <symbol id="i-ayar" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+  <symbol id="i-palet" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 1.5-2-.6-1.2.2-2.5 1.6-2.5H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3Z"/><path d="M7.5 11h.01M10 7h.01M15 7.5h.01"/></symbol>
+  <symbol id="i-ates" viewBox="0 0 24 24"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9Z"/></symbol>
+  <symbol id="i-yildiz" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9Z"/></symbol>
+  <symbol id="i-dil" viewBox="0 0 24 24"><path d="M4 6h9M8.5 4v2M6 6c0 4 3 7 6.5 8M12 6c-.5 3-3 6.5-7 8.5M14 20l4-9 4 9M15.5 17h5"/></symbol>
+  <symbol id="i-daire" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+  <symbol id="i-cizgi" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+</svg>
+
+<a class="atla" id="atla" href="#">İçeriğe geç</a>
+<div id="ag-uyari" class="ag-uyari" role="alert" hidden></div>
+
+<div class="kap">
+  <header class="ust">
+    <div class="marka">
+      <svg class="ik marka-ik" aria-hidden="true" focusable="false"><use href="#i-logo"/></svg>
+      <span class="marka-ad">Otomasyon</span>
+    </div>
+    <nav id="menu" class="menu" aria-label="Ana menü"></nav>
+    <div class="ust-sag">
+      <button type="button" id="ust-calisan" class="btn kucuk hafif" hidden></button>
+    </div>
+  </header>
+
+  <main id="ana" class="ana" tabindex="-1">
+    <noscript><p class="noscript">Bu panel JavaScript ister; tarayıcında etkinleştir.</p></noscript>
+  </main>
+
+  <section id="dock" class="dock" aria-label="Çalışma günlüğü"></section>
+</div>
+
+<div id="bildirimler" class="bildirimler" role="status" aria-live="polite"></div>
+
+<script src="/panel-cekirdek.js" defer></script>
+<script src="/panel-calisma.js" defer></script>
+<script src="/panel-isler.js" defer></script>
+<script src="/panel-yeni.js" defer></script>
+<script src="/panel-is-uretim.js" defer></script>
+<script src="/panel-is-metin.js" defer></script>
+<script src="/panel-is-gorsel.js" defer></script>
+<script src="/panel-is-ayar.js" defer></script>
+<script src="/panel-is-yayin.js" defer></script>
+<script src="/panel-toplu.js" defer></script>
+<script src="/panel-trend.js" defer></script>
+<script src="/panel-araclar.js" defer></script>
+<script src="/panel-kanal.js" defer></script>
+<script src="/panel-kaynaklar.js" defer></script>
+<script src="/panel-baslat.js" defer></script>
+</body>
+</html>

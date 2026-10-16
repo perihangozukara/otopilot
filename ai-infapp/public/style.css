@@ -1,0 +1,571 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --bg: #0c0d12;
+  --panel: #14161f;
+  --panel2: #1b1e2a;
+  --line: #262a38;
+  --text: #e8eaf2;
+  --dim: #8f96ac;
+  --accent: #ff4d6d;
+  --accent2: #7c5cff;
+  --ok: #2fd18b;
+  --warn: #ffb340;
+  --radius: 14px;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 20% -10%, #1a1430 0%, transparent 60%), var(--bg);
+  color: var(--text);
+  font: 15px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------------------------ topbar */
+
+.topbar {
+  display: flex; align-items: center; gap: 20px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(12,13,18,.82);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 40;
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand strong { display: block; letter-spacing: .08em; font-size: 13px; }
+.brand small { display: block; color: var(--dim); font-size: 12px; }
+.dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 0 16px rgba(255,77,109,.6);
+}
+.tabs { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.tabs button {
+  background: transparent; border: 1px solid transparent; color: var(--dim);
+  padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13px;
+  font-family: inherit;
+}
+.tabs button:hover { color: var(--text); background: var(--panel2); }
+.tabs button.on { color: var(--text); background: var(--panel2); border-color: var(--line); }
+.providerchip {
+  font-size: 12px; color: var(--dim); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; white-space: nowrap;
+}
+.providerchip.live { color: var(--ok); border-color: rgba(47,209,139,.35); }
+.providerchip.none { color: var(--warn); border-color: rgba(255,179,64,.35); }
+
+/* -------------------------------------------------------------------- main */
+
+main { max-width: 1180px; margin: 0 auto; padding: 26px 22px 90px; }
+
+h1 { font-size: 22px; margin: 0 0 6px; }
+h2 { font-size: 17px; margin: 0 0 14px; }
+h3 { font-size: 15px; margin: 0 0 10px; }
+p.lead { color: var(--dim); margin: 0 0 22px; max-width: 70ch; }
+
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 18px;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+label { display: block; font-size: 13px; color: var(--dim); margin: 0 0 6px; }
+input, select, textarea {
+  width: 100%; background: var(--panel2); border: 1px solid var(--line);
+  color: var(--text); padding: 11px 13px; border-radius: 10px;
+  font: inherit; font-size: 14px;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent2); }
+textarea { min-height: 110px; resize: vertical; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+.field { margin-bottom: 14px; }
+.help { font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+button.btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: 0; color: #fff; padding: 12px 20px; border-radius: 10px;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+button.btn:disabled { opacity: .45; cursor: not-allowed; }
+button.ghost {
+  background: var(--panel2); border: 1px solid var(--line); color: var(--text);
+  padding: 10px 16px; border-radius: 10px; font: inherit; cursor: pointer;
+}
+button.ghost:hover { border-color: var(--accent2); }
+button.danger { background: #3a1420; border: 1px solid #7c2439; color: #ff8fa3; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* ------------------------------------------------------------------ wizard */
+
+.progress { height: 4px; background: var(--panel2); border-radius: 4px; overflow: hidden; margin-bottom: 26px; }
+.progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .25s; }
+.stepnum { color: var(--dim); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+.qtitle { font-size: 24px; margin: 0 0 8px; }
+.qhint { color: var(--dim); margin: 0 0 22px; }
+
+.choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.choice {
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 13px 15px; cursor: pointer; font-size: 14px; text-align: left;
+  color: var(--text); font-family: inherit;
+}
+.choice:hover { border-color: var(--accent2); }
+.choice.on { border-color: var(--accent); background: rgba(255,77,109,.10); }
+
+/* --------------------------------------------------------------- character */
+
+.identity { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.idcell { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; }
+.idcell b { display: block; font-size: 14px; font-weight: 600; }
+.idcell span { display: block; font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+.locked { color: var(--warn); font-size: 12px; }
+.core {
+  font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; line-height: 1.7;
+  background: #0a0b10; border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+  color: #b9c0d8; white-space: pre-wrap; word-break: break-word;
+}
+.pill { display: inline-block; background: var(--panel2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; margin: 0 6px 6px 0; }
+
+/* ---------------------------------------------------------------- gallery */
+
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.shot { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.shot img { width: 100%; display: block; aspect-ratio: 4/5; object-fit: cover; background: #000; }
+.shot .meta { padding: 10px 12px; font-size: 11.5px; color: var(--dim); }
+.shot.golden { border-color: var(--warn); box-shadow: 0 0 0 1px rgba(255,179,64,.3); }
+.badge { display: inline-block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--warn); }
+
+.empty { text-align: center; padding: 50px 20px; color: var(--dim); }
+
+.placeholder {
+  aspect-ratio: 4/5; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; background: #0a0b10; color: var(--dim); font-size: 12.5px;
+  text-align: center; border-bottom: 1px solid var(--line);
+}
+
+button.tiny { padding: 5px 10px; font-size: 11.5px; }
+
+.risk {
+  display: inline-block; font-size: 9.5px; letter-spacing: .06em; padding: 2px 6px;
+  border-radius: 4px; vertical-align: 1px; margin-left: 4px; white-space: nowrap;
+}
+.risk.high { background: rgba(255,77,109,.16); color: #ff9db0; border: 1px solid rgba(255,77,109,.4); }
+.risk.mid { background: rgba(255,179,64,.14); color: #ffcf8f; border: 1px solid rgba(255,179,64,.35); }
+.choice.risky { border-color: rgba(255,77,109,.3); }
+
+.dossier p { margin: 0 0 12px; max-width: 78ch; }
+.dossier p:last-child { margin-bottom: 0; }
+
+/* Karakter dosyasi formunun kaydet cubugu: sayfanin en altinda, ekrana
+   yapismaz - icerigi kapatmasin diye normal akista durur. */
+.savebar { border-color: var(--accent2); }
+.savebar .row { align-items: center; }
+.savebar .dim { font-size: 12px; }
+
+/* ---------------------------------------------------------------- notices */
+
+.notice {
+  border-radius: 12px; padding: 15px 17px; margin-bottom: 18px; font-size: 14px;
+  border: 1px solid; line-height: 1.6;
+}
+.notice.warn { background: rgba(255,179,64,.07); border-color: rgba(255,179,64,.35); color: #ffd9a0; }
+.notice.info { background: rgba(124,92,255,.07); border-color: rgba(124,92,255,.35); color: #d3c9ff; }
+.notice.bad { background: rgba(255,77,109,.08); border-color: rgba(255,77,109,.4); color: #ffb3c1; }
+.notice b { color: #fff; }
+.notice.ok { background: rgba(64,214,142,.07); border-color: rgba(64,214,142,.35); color: #a9f0c8; }
+
+/* Referans alani onerisi (Ayarlar > Replicate / fal) */
+.guessbox {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(124,92,255,.3);
+  border-radius: 10px;
+  background: rgba(124,92,255,.06);
+  font-size: 13px;
+}
+.guessbox.warnbox {
+  border-color: rgba(255,179,64,.35);
+  background: rgba(255,179,64,.06);
+}
+.guessbox .help { margin: 4px 0 0; }
+.bad-help { color: #ffb3c1; }
+
+/* ----------------------------------------------------------------- toasts */
+
+.toastwrap { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 90; }
+.toast {
+  background: var(--panel2); border: 1px solid var(--line); border-left: 3px solid var(--accent2);
+  padding: 13px 17px; border-radius: 10px; font-size: 13.5px; max-width: 460px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5); animation: slide .2s ease;
+}
+.toast.ok { border-left-color: var(--ok); }
+.toast.bad { border-left-color: var(--accent); }
+@keyframes slide { from { transform: translateX(20px); opacity: 0; } }
+
+/* ------------------------------------------------------------------ modal */
+
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.72); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+/* display:flex, hidden niteliginin display:none'unu eziyordu; modal kutusu
+   hep ekranda kaliyordu (siyah serit gibi gorunuyordu). */
+.modal[hidden] { display: none; }
+
+/* Modal kutusu ekrani asamaz: govde kendi icinde kayar, baslik ve
+   butonlar sabit kalir. Uzun prompt listelerinde "Kapat" butonu
+   ekranin altinda kayboluyordu. */
+.modalbox {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 24px;
+  max-width: 560px; width: 100%;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.modalhead {
+  flex: 0 0 auto; display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 4px;
+}
+.modalhead h3 { margin: 0; flex: 1 1 auto; }
+.modalclose {
+  flex: 0 0 auto; background: var(--panel2); border: 1px solid var(--line);
+  color: var(--dim); width: 32px; height: 32px; border-radius: 8px;
+  font-size: 20px; line-height: 1; cursor: pointer; font-family: inherit;
+}
+.modalclose:hover { color: var(--text); border-color: var(--accent); }
+
+#modalbody {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  /* Flex zinciri herhangi bir sebeple kirilirsa diye ikinci guvence: */
+  max-height: calc(100vh - 190px);
+  max-height: calc(100dvh - 190px);
+  overscroll-behavior: contain; padding-right: 4px;
+}
+.modalactions {
+  flex: 0 0 auto; display: flex; gap: 10px; justify-content: flex-end;
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+  /* Butonlar her kosulda erisilebilir kalsin. */
+  position: sticky; bottom: 0; background: var(--panel);
+}
+
+/* ---------------------------------------------------------------- spinner */
+
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: rot .7s linear infinite; vertical-align: -2px; margin-right: 8px; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+.mono { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+.dim { color: var(--dim); }
+hr.sep { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+
+/* ------------------------------------------------------------ responsive */
+
+/* Tablet */
+@media (max-width: 820px) {
+  main { padding: 20px 16px 70px; }
+  .topbar { padding: 12px 16px; gap: 12px; }
+  .brand strong { font-size: 12px; }
+  .providerchip { order: 3; width: 100%; text-align: center; }
+  .tabs {
+    order: 2; width: 100%; margin-left: 0;
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs button { white-space: nowrap; flex: 0 0 auto; }
+  h1 { font-size: 20px; }
+  .qtitle { font-size: 21px; }
+  .identity { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .choices { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+
+/* Telefon */
+@media (max-width: 560px) {
+  body { font-size: 14.5px; }
+  main { padding: 16px 12px 60px; }
+  .card { padding: 16px; border-radius: 12px; }
+  h1 { font-size: 18px; }
+  .qtitle { font-size: 19px; }
+  p.lead { font-size: 13.5px; }
+  .identity { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .choices { grid-template-columns: 1fr 1fr; }
+  .choice { padding: 11px 12px; font-size: 13px; }
+  .gallery { grid-template-columns: 1fr 1fr; }
+  .grid3 { grid-template-columns: 1fr; }
+  .row { gap: 8px; }
+  .row > button.btn, .row > button.ghost { flex: 1 1 auto; }
+  .core { font-size: 11.5px; padding: 11px; }
+  .modal { padding: 10px; }
+  .modalbox { padding: 18px; max-height: calc(100dvh - 20px); }
+  .modalactions { flex-direction: column-reverse; }
+  .modalactions button { width: 100%; }
+  .toastwrap { left: 12px; right: 12px; bottom: 12px; }
+  .toast { max-width: none; }
+  .risk { font-size: 9px; }
+}
+
+/* Cok dar ekran: iki sutun bile sikisiyorsa tek sutuna dus */
+@media (max-width: 380px) {
+  .choices, .gallery { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------------------- studyo cubugu */
+
+/* Uc panel arasi gecis: kim ne uretmek istiyorsa ona tiklar. */
+.studiobar {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  padding: 4px; border: 1px solid var(--line); border-radius: 12px;
+  background: rgba(10,11,16,.6);
+}
+.studiobar button {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent; border: 1px solid transparent; color: var(--dim);
+  padding: 8px 14px; border-radius: 9px; cursor: pointer;
+  font-family: inherit; font-size: 13px; white-space: nowrap;
+}
+.studiobar button:hover { color: var(--text); background: var(--panel2); }
+.studiobar button.on {
+  color: #fff; border-color: rgba(124,92,255,.5);
+  background: linear-gradient(135deg, rgba(255,77,109,.18), rgba(124,92,255,.22));
+}
+.studiobar button span { font-size: 15px; }
+
+/* Tasarim onizlemesi - seffaf PNG'ler icin satranc zemin */
+.preview {
+  border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+  display: flex; align-items: center; justify-content: center; min-height: 220px;
+  background-color: #1a1d29;
+  background-image:
+    linear-gradient(45deg, #23273a 25%, transparent 25%),
+    linear-gradient(-45deg, #23273a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #23273a 75%),
+    linear-gradient(-45deg, transparent 75%, #23273a 75%);
+  background-size: 22px 22px;
+  background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+}
+.preview svg { max-width: 100%; height: auto; }
+
+@media (max-width: 820px) {
+  .studiobar { order: 1; width: 100%; flex-wrap: nowrap; overflow-x: auto; }
+  .studiobar button { flex: 0 0 auto; }
+}
+
+/* ------------------------------------------------------- galeri eylemleri */
+.shot .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+button.tiny, a.tiny {
+  font-size: 12px;
+  padding: 5px 9px;
+}
+a.ghost {
+  display: inline-block;
+  text-decoration: none;
+}
+button.ghost.danger, a.ghost.danger { color: #ffb3c1; border-color: rgba(255,77,109,.35); }
+button.ghost.danger:hover { background: rgba(255,77,109,.1); }
+
+.modalbox.wide { max-width: min(1100px, 94vw); }
+#modalbody img.full {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* -------------------------------------------------- saglayici karsilastirma */
+.cmp {
+  margin: 0 0 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,.02);
+}
+.cmp > summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 600;
+  color: #d3c9ff;
+  list-style: none;
+}
+.cmp > summary::-webkit-details-marker { display: none; }
+.cmp > summary::before { content: '▸ '; }
+.cmp[open] > summary::before { content: '▾ '; }
+.cmpwrap { overflow-x: auto; padding: 0 14px; }
+.cmptable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.cmptable th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  color: #9d96b8;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cmptable td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  vertical-align: top;
+}
+.cmptable tr.aktif > td { background: rgba(124,92,255,.08); }
+.cmptable tr.notsatiri > td { padding-top: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+.cmptable .rozetler { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.cmp > .help { padding: 0 14px 14px; }
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid rgba(255,255,255,.15);
+  color: #c9c4de;
+  white-space: nowrap;
+}
+.tag.iyi { background: rgba(64,214,142,.12); border-color: rgba(64,214,142,.35); color: #a9f0c8; }
+.tag.orta { background: rgba(255,179,64,.12); border-color: rgba(255,179,64,.35); color: #ffd9a0; }
+.tag.kotu { background: rgba(255,77,109,.12); border-color: rgba(255,77,109,.35); color: #ffb3c1; }
+
+/* Dar ekranda tabloyu karta cevir - yatay kaydirma yerine okunur satirlar. */
+@media (max-width: 560px) {
+  .cmptable thead { display: none; }
+  .cmptable, .cmptable tbody, .cmptable tr, .cmptable td { display: block; width: 100%; }
+  .cmptable tr {
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 6px 0;
+  }
+  .cmptable tr.notsatiri { border: 0; margin-top: -8px; margin-bottom: 12px; }
+  .cmptable td { border: 0; padding: 6px 12px; }
+  .cmptable td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    color: #9d96b8;
+    margin-bottom: 2px;
+  }
+  .cmptable tr.notsatiri td::before { content: none; }
+}
+
+/* ------------------------------------------------ masaustu cikti klasoru */
+.exportbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(64,214,142,.3);
+  border-radius: 10px;
+  background: rgba(64,214,142,.07);
+  color: #a9f0c8;
+  font-size: 13px;
+}
+.exportbar b { color: #fff; }
+.jobrow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  font-size: 13px;
+}
+.jobrow > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------- Etsy nis / pazar */
+.nisler { display: flex; flex-wrap: wrap; gap: 6px; }
+.adimlar { margin: 10px 0 10px 20px; padding: 0; font-size: 14px; line-height: 1.8; color: #c9c4de; }
+.adimlar li { margin-bottom: 2px; }
+.sozsatir {
+  display: flex; gap: 12px; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.sozsatir:last-child { border-bottom: 0; }
+
+/* ------------------------------------------------------ Etsy varyantlari */
+.varyantlar {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.varyant {
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+  font-size: 11px;
+  transition: border-color .12s, background .12s;
+}
+.varyant:hover { border-color: rgba(124,92,255,.5); background: rgba(124,92,255,.06); }
+.varyantgorsel {
+  background: rgba(255,255,255,.06);
+  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 6px;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.varyantgorsel svg { max-height: 120px; }
+
+.sablonrozet { display: inline-flex; gap: 2px; align-items: center; }
+
+/* ------------------------------------------------- listeleme gorseli */
+.mockonizleme {
+  max-width: 340px;
+  margin: 10px auto 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.renkNokta {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 1px solid rgba(255,255,255,.25);
+  vertical-align: middle;
+}
+button.ghost.secili {
+  border-color: rgba(124,92,255,.6);
+  background: rgba(124,92,255,.14);
+  color: #fff;
+}
+
+/* ------------------------------------------------------- kurulum durumu */
+.kurulumsatir {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  font-size: 13px;
+}
+.kurulumsatir:last-child { border-bottom: 0; }
+.kurulumsatir .help { margin: 3px 0 0; }
+.kurulumisaret {
+  flex: 0 0 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+.kurulumsatir.tamam .kurulumisaret { background: rgba(64,214,142,.16); color: #a9f0c8; }
+.kurulumsatir.eksik .kurulumisaret { background: rgba(255,77,109,.16); color: #ffb3c1; }
+.kurulumsatir.istege .kurulumisaret { background: rgba(255,255,255,.07); color: #9d96b8; }
+.kurulumsatir .tag { margin: 0 6px; }

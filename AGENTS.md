@@ -1,0 +1,189 @@
+# BU DOSYAYI ÖNCE OKU — yapay zekâ ajanı için kullanım kılavuzu
+
+Bu depo iki iş yapar. Kullanıcı bir istek yazar, sen aşağıdaki akışı **doğrudan uygularsın**.
+"Nasıl yapalım, nasıl kullanalım?" diye SORMA; kılavuz burada. Belirtilmeyen her ayrıntıyı aşağıdaki kurallarla
+kendin seç. Yalnızca kılavuzun "kullanıcıya sor" dediği yerlerde ya da konu/tarif hiç yoksa tek kısa soru sor.
+
+1. **YouTube / Shorts / Reels / TikTok videosu**: konudan bitmiş MP4 + altyazı + kapak + yayın paketi.
+2. **AI influencer (Ai Infapp)**: sanal bir insan yaratıp kilitler, her istemde aynı kimliği korur;
+   sahne, prompt, görsel ve paylaşım metni üretir. Ayrıca Etsy baskı tasarımı, fotoroman, reklam görseli.
+
+Örnek istekler:
+- "Ay neden hep aynı yüzünü gösterir, 40 saniyelik İngilizce Shorts yap"
+- "Kara delikler hakkında 8 dakikalık Türkçe uzun video hazırla"
+- "35 yaşında İstanbullu bir fitness influencer yarat, spor salonunda 3 foto ve Instagram metni üret"
+- "Etsy için kedi temalı duvar posteri tasarla"
+
+## 0. Kurulum (bir kez)
+
+```bash
+node -v                       # en az 22 olmalı; değilse kullanıcıya söyle
+node ff-yol.js                # ffmpeg bulunamazsa 0 dışı çıkış kodu verir
+npm ci --ignore-scripts       # paketler (node_modules yoksa)
+```
+
+- ffmpeg yoksa kullanıcıya söyle ve **onay al**, sonra kur (`winget install Gyan.FFmpeg` | `brew install ffmpeg` | `sudo apt install ffmpeg`).
+- `PANEL.bat` çalıştırma: soru sorup bekler, ajan yanıtlayamaz. Panel gerekmez; her şey komut satırından yapılır.
+- API anahtarı **zorunlu değil**. `.env.ornek` → `.env` yalnızca isteğe bağlı gelişmiş özellikler içindir.
+- Her şey yalnızca `127.0.0.1`'de çalışır. Dışarı açma.
+- Geçici dosyaları (istek gövdeleri vb.) depo köküne değil sistem geçici klasörüne yaz.
+
+## Para vermeden başla (anahtar gerekmez) ve anahtarlar
+
+Kullanıcının hiç parası/anahtarı yoksa da bu depo çalışır; en azından ilk videoyu ve ilk karakteri üretebilirsin.
+Aşağıdakilerin hepsi anahtarsız ve ücretsizdir (hepsi gerçek bir işte denendi):
+
+| İş | Ücretsiz yol | Not |
+|---|---|---|
+| Senaryo | **sen (ajan) yazarsın** | Claude/vidIQ anahtarı gerekmez |
+| Görsel (video) | Wikimedia Commons, Openverse, NASA | lisans süzülür, atıf `ATIF.txt`'e yazılır |
+| Ses | Edge sesli okuma (`seslendir.js`) | resmî API değil, ticari hakkı belirsiz; yerel alternatif Piper (internetsiz, `.env.ornek`) |
+| Kurgu | ffmpeg (yerel) | |
+| AI influencer görseli | Pollinations (Ai Infapp varsayılanı) | küçük, filigranlı, ara sıra yavaş/`402`; tam ücretsiz ve sınırsız seçenek: kendi bilgisayarında AUTOMATIC1111/Forge ya da ComfyUI (GPU ister) |
+| Karakter, sahne, prompt, paylaşım metni | yerel, API yok | |
+| Etsy tasarımı, reklam, fotoroman sayfası | yerel vektör, API yok | PNG/PDF için Chrome ya da Edge |
+
+**Ücretsiz kayıtla kaliteyi artıran anahtarlar** (hepsi isteğe bağlı; ücretsiz kademelerin sınırları değişir, kayıt sayfasından doğrula):
+Pexels ve Pixabay (daha isabetli stok görsel: `PEXELS_KEY`, `PIXABAY_KEY`), Cloudflare Workers AI / Together / Hugging Face (AI görsel:
+`CF_ACCOUNT_ID`+`CF_API_TOKEN`, `TOGETHER_KEY`, `HF_TOKEN`), Leonardo (günlük ücretsiz kredi, Ai Infapp sağlayıcısı), vidIQ (ücretsiz planda kredi verir; aşağıdaki "vidIQ ile video üret").
+Claude (Anthropic) anahtarı ücretlidir; gerekmez, çünkü senaryoyu sen yazarsın.
+
+**Anahtar nereye girilir:** `.env.ornek` dosyasını `.env` olarak kopyalayıp içine yaz (`.env` repoya girmez) ya da panelde **Kaynaklar** sekmesi.
+Ai Infapp'in görsel sağlayıcısı için tarayıcıdaki **Ayarlar** ekranı ya da `POST /api/saglayici`. Kullanıcı anahtarı sana verirse yalnızca bu yerlere yaz;
+sohbette tekrarlama, commit'leme. Her kullanıcı kendi anahtarını bağlar.
+
+## 1. YouTube videosu — adım adım
+
+İş adı: küçük harf, rakam, tire (ör. `ay-neden-ayni-yuz`). Çıktı `uretim/<is>/` altına gider.
+
+```bash
+node yeni-is.js <is> --baslik "Başlık" --dil en --format short
+#   --dil tr|en|es|de|fr   --format short|long|reels|tiktok   --sure <dakika>   --kanal "KANAL ADI"
+```
+
+**Belirtilmeyenler için karar ver, sorma:**
+- `--dil`: kullanıcının istediği videonun dili; belirtmediyse isteği yazdığı dil.
+- `--format`: "Shorts/kısa/dikey" → `short`; "Reels" → `reels`; "TikTok" → `tiktok`; hiçbiri yoksa `long`.
+- Süre: `short` ≈ 40 sn (verilen süreye göre ayarla, 15-60 sn arası uygun); `long` için `--sure 8` ver (varsayılan 15 dk çok uzundur).
+- Kanal adı: kullanıcı verdiyse `--kanal`. Vermediyse `uretim/<is>/konu.json` içinde `"intro": 0, "outro": 0, "markaKose": 0`
+  yap (aksi hâlde videoya "KANALIM" yazısı basılır).
+- `yeni-is.js` çıktısı "sıradaki adım: senaryo-claude.js" der; anahtar yoksa o adımı atla, senaryoyu kendin yaz.
+
+**Senaryoyu SEN yaz** (anahtar gerekmez) ve şu dosyaya kaydet: `uretim/<is>/Voice/SESLENDIRME-TAM-METIN.txt`
+- Yalnızca okunacak düz anlatım metni. Başlık, sahne yönergesi, köşeli parantez, emoji YOK.
+- Paragraflar boş satırla ayrılır; her paragraf bir sahne adayı olur (40 sn için 4-6 paragraf). Dil `--dil` ile aynı olmalı.
+- Süre: İngilizce dakikada ~150 kelime (40 sn ≈ 100 kelime), Türkçe ~115 kelime (8 dk ≈ 900 kelime).
+  İlk cümle kanca olsun, son cümle takip çağrısı. Doğru bilgi yaz; emin olmadığın rakam/iddiayı yazma.
+- (Claude/vidIQ anahtarı varsa alternatif: `node senaryo-claude.js <is>`; ücretlidir, önce maliyeti söyle.)
+
+```bash
+node gorsel-bul.js <is>       # ücretsiz kaynaklardan (Wikimedia, Openverse, NASA…) görsel bulur, lisans süzer
+node seslendir.js <is>        # ücretsiz Edge sesi, paragraf paragraf (+ zamanlama)
+node video-yap.js <is>        # kurgu + altyazı + kapak + yayın paketi
+```
+
+**Görselleri KONTROL ET** (atlama): `uretim/<is>/Visuals/manifest.json` her sahne için aranan ifadeyi (`aramalar`) ve
+paragrafı (`paragraflar`) gösterir. Otomatik arama bazen alakasız çıkar (ör. "Billions" kelimesinden dizi karesi).
+Zayıf sahneyi düzelt, sonra `video-yap.js` çalıştır:
+
+```bash
+node gorsel-bul.js <is> --sahne 3 --ara "far side of the moon"
+```
+
+Görüntü okuyabiliyorsan `Visuals/NNN-*/01.jpg` dosyalarına bak. Tüm videoyu yeniden kurmak için `video-yap.js <is> --yeniden`.
+
+**Hata olursa** (mesaj Türkçe ve çözümü söyler): çıkış `3` (ağ/servis) → 30 sn bekleyip aynı komutu en çok 2 kez yeniden çalış, ilerleme korunur;
+`4` (yetersiz sonuç) → mesajdaki çözümü uygula (görsel azsa `--sahne N --ara`; paragraf düştüyse `seslendir.js`'i yeniden çalıştır);
+`2` (girdi/ayar) → dosyayı düzelt; `5` disk; `6` aynı iş zaten çalışıyor; `7` maliyet sınırı. Tam liste: `README.md` "Panelsiz kullanım".
+Ayar alanlarının tam listesi: `KONU-JSON.md` (geçiş, müzik, altyazı biçimi, ses vb. `uretim/<is>/konu.json`).
+
+Seslendirmede `403` alırsan: `npm install msedge-tts@latest --ignore-scripts --no-save` çalıştır (Microsoft'un ücretsiz sesi
+zaman zaman kural değiştirir), `seslendir.js`'i yeniden başlat; tamamlanan paragraflar tekrar üretilmez.
+
+**Bitince kullanıcıya şunları ver** (dosya yollarıyla):
+- `uretim/<is>/Videos/<is>.mp4`, `<is>.srt`, `<is>-kapak.jpg`
+- `uretim/<is>/YAYIN-PAKETI.md` (başlık, açıklama, bölümler, etiketler, görsel atıfları). Açıklamaya atıflar yapıştırılmalı.
+- Uyarılar: YouTube'a yükleme otomatik değildir, kullanıcı yükler ve "değiştirilmiş/sentetik içerik" kutusunu işaretler.
+  Ücretsiz Edge sesi resmî bir API değildir, ticari kullanım hakkı belirsizdir; gelir getiren kanal için `seslendir.js --motor azure` (kendi Azure anahtarıyla) önerilir.
+
+Süre: 40 sn'lik kısa videoda toplam birkaç dakika (görsel ~1-2 dk, ses ~1 dk, kurgu ~30 sn).
+
+## 2. AI influencer (Ai Infapp) — HTTP API ile
+
+**Sunucu:** önce `GET http://127.0.0.1:4200/api/durum` dene; yanıt veriyorsa zaten çalışıyordur, yenisini başlatma.
+Yoksa `node ai-infapp/server.js`'i arka planda başlat (port: `AI_INFAPP_PORT`), `/api/durum` yanıt verene dek en çok 10 sn bekle.
+İşin bitince kendi başlattığın sunucuyu kapat.
+
+Tüm uçlar JSON konuşur. Gövdeyi geçici klasörde bir dosyaya yazıp gönder:
+`curl.exe -s -X POST http://127.0.0.1:4200/api/... -H "content-type: application/json" --data-binary @govde.json`
+(Windows PowerShell'de `curl` değil `curl.exe`.) Veriler `ai-infapp/data/` içindedir (anahtarlar dahil): **asla commit etme, sohbette gösterme.**
+
+| Adım | Uç | Not |
+|---|---|---|
+| Durum | `GET /api/durum` | karakter var mı, hangi görsel sağlayıcı aktif |
+| Sorular | `GET /api/sorular` | her sorunun `key`, `options`, `required` alanı; **seçenek metinlerini aynen kopyala** (çoğu Türkçe karaktersiz, bazıları `İzmir`, `Kaslı` gibi Türkçe karakterli) |
+| Karakter | `POST /api/karakter` `{"answers":{…}}` | zorunlu alanlar aşağıda |
+| Sahneler | `POST /api/sahneler` `{"count":3}` | hazır sahne önerileri |
+| İstekten sahne | `POST /api/brief` `{"text":"plajda bir foto"}` | serbest isteği `scene` nesnesine çevirir |
+| Prompt | `POST /api/prompt` `{"scene":{…}}` | kimliği sabit tutan prompt |
+| Görsel | `POST /api/uret` `{"scene":{…},"count":1}` | `scene`'i `brief`/`sahneler` yanıtından aynen ver. Dosya `ai-infapp/data/images/`; yanıttaki `images[].filename` ve `export` alanı yolu verir |
+| Paylaşım metni | `POST /api/metin` `{"platform":"instagram","scene":{…}}` | açıklama + etiketler; `platform` değerleri `GET /api/metin/platformlar` |
+| Haftalık plan | `GET /api/plan` | |
+
+**Karakter oluştururken sorma, seç:** kullanıcının tarifine uyan her alanı o tariften al; tarifte olmayanları tarifle çelişmeyecek
+şekilde SEN seç. Zorunlu alanlar: `gender, region, ethnicity, skinTone, eyeColor, hairColor, hairStyle, age, bodyType,
+measurements{height_cm,weight_kg}, zodiac, education, interests (en az 2)`. Yaşadığı yer belirtildiyse `continent, country, cityName`
+(ve `hometownMode`) alanlarını da ver; boş bıraktığın hayat soruları rastgele doldurulur. Doğrulanmış örnek:
+`{"gender":"Kadin","region":"Akdeniz","ethnicity":"Akdeniz","skinTone":"Cok acik (porselen)","eyeColor":"Kahverengi","hairColor":"Siyah","hairStyle":"Trasli / cok kisa","age":27,"bodyType":"Ince / zayif","measurements":{"height_cm":168,"weight_kg":56},"zodiac":"Koc","education":"Universite (lisans)","interests":["Fitness","Moda"]}`
+
+**409 (zaten kilitli karakter var):** kullanıcıya sor — mevcut karakterle devam mı (yeni sahne/içerik), yoksa sıfırlama mı.
+Sıfırlama yalnız kullanıcı onaylarsa: `POST /api/sifirla {"confirm":"SIFIRLA"}` (veriyi arşive taşır; `"hard":true` kalıcı siler).
+
+Vesikalık seti (8 açı, `POST /api/referans/uret`) zorunlu değil; kullanıcı istemedikçe ve sağlayıcı referans görseli desteklemedikçe atla.
+
+Dürüstlük notları (kullanıcıya da söyle):
+- Ai Infapp görseli **kendisi üretmez**; bağlı sağlayıcıdan çeker. Varsayılan Pollinations ücretsiz ve anahtarsızdır ama kalitesi
+  orta, filigranlı, ara sıra yavaş ya da `402` verir (otomatik tekrar dener). Kaliteli ve yüz tutarlı sonuç için kullanıcı kendi
+  sağlayıcı anahtarını bağlar (`GET /api/saglayicilar` seçenekleri gösterir, `POST /api/saglayici` bağlar). Anahtarı kullanıcıdan
+  iste, ama sohbette tekrar yazma ve dosyaya kaydetme; kullanıcı isterse tarayıcıdaki **Ayarlar** ekranından kendisi girer.
+- Yüz tutarlılığı sağlayıcıya bağlıdır; ayrıntı `ai-infapp/README.md` ("Dürüst olalım").
+- Gerçek kişi, ünlü ya da marka taklidi yapma; karakter tamamen kurgusaldır. Paylaşımda yapay zekâ ürünü olduğunu belirtmesini öner.
+
+Diğer stüdyolar (Etsy baskı tasarımı, fotoroman, reklam görseli): aynı sunucuda çalışır. Etsy ve fotoroman `ai-infapp/README.md`
+içindeki "Etsy" ve "Fotoroman" bölümlerinde anlatılır; reklam/grafik tasarım için `ai-infapp/src/studios/reklam/index.js`'e bak.
+Uçlar `ai-infapp/server.js` ve `ai-infapp/src/studios/*/index.js` içindedir. PNG/PDF çıktısı için Chrome ya da Edge kurulu olmalı.
+
+## vidIQ ile video üret (kullanıcının vidIQ kredisiyle; Seedance, Veo, Kling…)
+
+Kullanıcının vidIQ hesabı ve vidIQ MCP bağlantısı ajanında kuruluysa (`vidiq_*` araçları görünür) videoyu depodaki hat yerine
+doğrudan vidIQ'nun araçlarıyla üretebilirsin. **Bu yol bu depoda henüz uçtan uca denenmedi:** ilk kullanımda 2-3 saniyelik tek bir klipten başla.
+
+1. `vidiq_balance` (ücretsiz): kalan krediyi kullanıcıya söyle.
+2. Senaryo: kendin yaz (ücretsiz) ya da `vidiq_generate_script` (dakika başına 1 kredi).
+3. Ses: `vidiq_voiceover_list_voices` → `vidiq_voiceover_generate` (1000 karakter başına 14 kredi, çağrı başına en çok 5000 karakter). Kurgu için vidIQ sesi gerekir
+   (kurgu aracı yalnız https adreslerini okur; yerel ses dosyası verilemez).
+4. Klipler: `vidiq_generate_video` (`seedance-2-fast` 720p en ucuzu; `seedance-2` 720p/1080p; 1-15 sn; `aspectRatio` 9:16 ya da 16:9).
+   Asenkrondur: dönen `mcpJobId` ile `vidiq_job_poll` (ücretsiz) tamamlanana dek sorgula. Maliyet = süre × modelin saniye ücreti × 20 kredi, gönderimde netleşir.
+   **Birden çok klip başlatmadan önce toplam maliyeti kullanıcıya söyle ve onay al.** Aynı klibi tekrar başlatma (her başlatma ücretlidir); başarısız iş krediyi iade eder.
+   Komut reddedilirse (`content_policy_rejected`, `invalid_duration`…) isteği değiştir, aynısını yeniden gönderme.
+5. Birleştirme: `vidiq_compose` (sahneler, vidIQ sesi, müzik, altyazı stili; 4 sn başına 1 kredi, en fazla 240 sn) → `vidiq_job_poll` → `videoUrl`; dosyayı indirip `uretim/<is>/Videos/` altına kaydet.
+6. Ücretsiz stok klip: `vidiq_generate_broll` (çağrı başına 1 kredi; fotoğrafçı atfı zorunlu).
+
+vidIQ'yu depodaki betikler de kullanır (`VIDIQ_KEY`, senaryo/başlık/trend/performans); aynı vidIQ MCP anahtarı yeter.
+
+## 3. Diğer
+
+- **Video indirici** (`video-indirici/`, `node video-indirici/server.js`, 4190): yalnızca kullanıcının kendi ya da izinli içeriği için.
+- **Panel** (`node panel.js`, 4173): tarayıcıdan kullanmak isteyen kullanıcı içindir; sen komut satırını kullan.
+
+## 4. Kurallar
+
+- Ücretli adım (Claude/vidIQ ile senaryo, ücretli görsel sağlayıcı) başlatmadan önce tahmini maliyeti söyle; varsayılan akış ücretsizdir.
+- `.env`, `ai-infapp/data/`, `uretim/` repoda değildir (`.gitignore`). Anahtarları sohbete, koda ya da commit'e yazma.
+- Telifli görsel/müzik uydurma; görsel atıflarını (`ATIF.txt`) açıklamadan çıkarma.
+- Başkasının videosunu (ör. bir futbolcunun Shorts'larını) indirip kırparak/yeniden düzenleyerek yüklemeyi YAPMA; telif ihlalidir, kanal ceza alır.
+  İstenirse şunu öner ve yap: konuyu araştır (`trend-ara.js`, `viral-analiz.js`, vidIQ: hangi Shorts neden tutmuş), sonra **özgün** video üret
+  (kendi senaryon + kendi sesin + lisanslı/CC görsel, bu hat). Maç/yayın görüntüsü ücretsiz ve yasal kaynaklarda yoktur; kullanıcı izinli görüntüyü kendisi sağlarsa `video-seslendir.js` ile üzerine anlatım eklenir.
+- Kodu değiştirirsen ilgili testi çalıştır: `npm run test:panel` · `npm run test:indirici` · `npm run test:aiinfapp`
+  (tümü: `npm test`, 860+ test, birkaç dakika). Testler ağ çağrılarını sahteler, gerçek anahtara ya da ücretli servise dokunmaz.
+- Harita: `*.js` kök betikleri = YouTube hattı · `lib/` ortak kod · `panel.js` + `panel-public/` panel · `video-indirici/` · `ai-infapp/` · `test/` · `uretim/` (çıktılar).

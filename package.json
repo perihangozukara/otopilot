@@ -1,0 +1,21 @@
+{
+  "name": "youtube-otomasyon",
+  "version": "1.2.0",
+  "description": "Video icerik otomasyon paneli (localhost) — YouTube, Shorts, Reels, TikTok",
+  "private": true,
+  "scripts": {
+    "start": "node panel.js",
+    "panel": "node panel.js",
+    "test": "node --test --test-concurrency=2 \"test/**/*.test.js\" \"video-indirici/test/**/*.test.js\" \"ai-infapp/test/**/*.test.js\"",
+    "test:panel": "node --test --test-concurrency=2 \"test/**/*.test.js\"",
+    "test:indirici": "node --test \"video-indirici/test/**/*.test.js\"",
+    "test:aiinfapp": "node --test \"ai-infapp/test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "msedge-tts": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

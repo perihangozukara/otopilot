@@ -1,0 +1,14 @@
+{
+  "name": "video-indirici",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Localhost video indirici paneli (yt-dlp + ffmpeg). Bagimlilik yok.",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test \"test/**/*.test.js\""
+  }
+}

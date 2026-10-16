@@ -1,0 +1,3 @@
+# Windows toplu is dosyalari CRLF satir sonu ister (LF olunca goto/etiketler bazen bulunamaz)
+*.bat text eol=crlf
+*.cmd text eol=crlf

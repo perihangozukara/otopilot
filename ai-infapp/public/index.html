@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ai Infapp</title>
+  <!-- ?v= surumu: tarayici eski CSS/JS'i onbellekten kullanmasin diye.
+       Arayuz degistiginde bu sayiyi artir. -->
+  <link rel="stylesheet" href="/style.css?v=20">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>
+      <strong>AI INFAPP</strong>
+      <small id="charline">yukleniyor...</small>
+    </div>
+  </div>
+  <nav class="studiobar" id="studiobar"></nav>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="providerchip" id="providerchip"></div>
+</header>
+
+<main id="view"></main>
+
+<div class="toastwrap" id="toasts"></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modalbox">
+    <div class="modalhead">
+      <h3 id="modaltitle"></h3>
+      <button class="modalclose" id="modalclose" title="Kapat (ESC)" aria-label="Kapat">&times;</button>
+    </div>
+    <div id="modalbody"></div>
+    <div class="modalactions" id="modalactions"></div>
+  </div>
+</div>
+
+<script src="/app.js?v=20"></script>
+</body>
+</html>
