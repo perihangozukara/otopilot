@@ -9,7 +9,8 @@
     "test": "node --test --test-concurrency=2 \"test/**/*.test.js\" \"video-indirici/test/**/*.test.js\" \"ai-infapp/test/**/*.test.js\"",
     "test:panel": "node --test --test-concurrency=2 \"test/**/*.test.js\"",
     "test:indirici": "node --test \"video-indirici/test/**/*.test.js\"",
-    "test:aiinfapp": "node --test \"ai-infapp/test/**/*.test.js\""
+    "test:aiinfapp": "node --test \"ai-infapp/test/**/*.test.js\"",
+    "egitim": "node lib/egitim.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

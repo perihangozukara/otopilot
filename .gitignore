@@ -82,3 +82,6 @@ ai-infapp/.env.*
 ai-infapp/*.log
 # vidIQ verisinden uretilen canli akis (3. taraf verisi: depoda paylasilmaz; "vidIQ'dan tazele" ile olusur)
 video-indirici/kesfet-veri.json
+
+# Egitim PDF isareti: panel egitim PDF lerini masaustune bir kez indirir (lib/egitim.js)
+.egitim-indirildi

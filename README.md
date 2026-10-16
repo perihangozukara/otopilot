@@ -57,6 +57,10 @@ ffmpeg gerekir: `brew install ffmpeg` veya `sudo apt install ffmpeg`.
 
 Paketler `package-lock.json` ile sabitlenmiştir (`npm ci` herkese aynı sürümleri kurar).
 
+## Eğitim PDF'leri
+
+`egitim/` klasöründe dört eğitim PDF'i var: YouTube içerik üretimi (seri 1), Instagram büyüme yol haritası, TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi. Panel terminalde ilk kez açılınca bunları masaüstünde **Otomasyon Eğitim** klasörüne kendisi kopyalar (var olan dosyaya dokunmaz). Elle: `npm run egitim`.
+
 ## Anahtarlar
 
 Panelin **Kaynaklar** sekmesinden girilir (kaydedince otomatik test edilir, silinebilir) ya da `.env` dosyasına elle yazılır (şablon: `.env.ornek`).

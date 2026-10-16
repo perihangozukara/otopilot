@@ -20,7 +20,13 @@ kendin seç. Yalnızca kılavuzun "kullanıcıya sor" dediği yerlerde ya da kon
 node -v                       # en az 22 olmalı; değilse kullanıcıya söyle
 node ff-yol.js                # ffmpeg bulunamazsa 0 dışı çıkış kodu verir
 npm ci --ignore-scripts       # paketler (node_modules yoksa)
+npm run egitim                # eğitim PDF'lerini masaüstündeki "Otomasyon Eğitim" klasörüne kopyalar (eksikleri; var olana dokunmaz)
 ```
+
+**Eğitim PDF'leri:** depoda `egitim/` içinde 4 eğitim PDF'i var: YouTube içerik üretimi (seri 1), Instagram büyüme yol haritası,
+TikTok algoritması rehberi ve büyüme haritası, TikTok AI influencer rehberi. `npm run egitim` bunları kullanıcının masaüstüne koyar;
+panel terminalde açılınca da bunu bir kez kendisi yapar. Kurulumda çalıştır, çıktıdaki klasör yolunu kullanıcıya söyle ve
+bu konularda soru gelirse PDF'lerin masaüstünde olduğunu hatırlat.
 
 - ffmpeg yoksa kullanıcıya söyle ve **onay al**, sonra kur (`winget install Gyan.FFmpeg` | `brew install ffmpeg` | `sudo apt install ffmpeg`).
 - `PANEL.bat` çalıştırma: soru sorup bekler, ajan yanıtlayamaz. Panel gerekmez; her şey komut satırından yapılır.

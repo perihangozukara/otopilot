@@ -526,6 +526,7 @@ function basla() {
     console.log("   Video indirici ayrı çalışır: panelden \"Video indirici\" düğmesiyle başlat (http://localhost:" + INDIRICI_PORT + ").");
     console.log("   Ai Infapp ayrı çalışır: panelden \"Ai Infapp\" düğmesiyle başlat (http://localhost:" + AIINFAPP_PORT + ").");
     console.log("\n   Kapatmak için bu pencereyi kapat.\n");
+    require("./lib/egitim").otomatik();   // eğitim PDF'leri bir kez masaüstüne iner (yalnız terminalde; hata vermez)
     if (process.send) process.send({ hazir: true, port: PORT });
   });
 }
