@@ -1,4 +1,4 @@
-// gorsel-bul.js <is> [--yeniden] [--sahne <no> --ara "<ifade>"] [--limit-bekle <sn>] [--uretme] [--arsiv-temizle]
+// gorsel-bul.js <is> [--stok] [--yeniden] [--sahne <no> --ara "<ifade>"] [--limit-bekle <sn>] [--uretme] [--arsiv-temizle]
 //
 // KONU BAGIMSIZ gorsel bulucu. Spor, yemek, reklam, uzay — fark etmez.
 //
@@ -57,6 +57,16 @@ if (require.main === module) {
     if (degerYok(bayrak["limit-bekle"])) hata("--limit-bekle için saniye ver (örn. --limit-bekle 600).");
     limitBekleSn = Number(bayrak["limit-bekle"]);
     if (!Number.isFinite(limitBekleSn) || limitBekleSn < 0) hata("--limit-bekle saniye cinsinden bir sayı olmalı (örn. 600).");
+  }
+
+  // klip-hazirla.js ile hazirlanan iste (kendi video kliplerin) stok gorsel aranmaz; istenirse --stok
+  if (!bayrak.stok) {
+    let m = null;
+    try { m = ortak.jsonOku(require("path").join(ortak.isDizin(is), "Visuals", "manifest.json"), null); } catch (e) { m = null; }
+    if (m && m.klipModu) {
+      console.log("ATLANDI: bu iş klip-hazirla.js ile hazırlandı (kendi kliplerin); stok görsel aranmadı. Yine de aramak için: node gorsel-bul.js " + is + " --stok");
+      process.exit(0);
+    }
   }
 
   akis.calistir({

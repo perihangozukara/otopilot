@@ -114,6 +114,23 @@ zaman zaman kural değiştirir), `seslendir.js`'i yeniden başlat; tamamlanan pa
 
 Süre: 40 sn'lik kısa videoda toplam birkaç dakika (görsel ~1-2 dk, ses ~1 dk, kurgu ~30 sn).
 
+### Kullanıcının kendi klipleriyle (animasyon, AI video)
+
+Kullanıcı kendi video kliplerini (Flow/Veo/Vibes, Blender, kendi çekimi) kullanmak istiyorsa `gorsel-bul.js` **çalıştırma**:
+
+```bash
+node yeni-is.js <is> --baslik "Başlık" --dil tr --format long --sure 2
+# senaryoyu yaz -> uretim/<is>/Voice/SESLENDIRME-TAM-METIN.txt (her paragraf = bir sahne)
+node klip-hazirla.js <is>                      # Visuals/NNN-… klasörleri + uretim/<is>/SAHNE-LISTESI.md
+node klip-hazirla.js <is> --kaynak "<klasör>"  # klipler hazırsa: 01.mp4, 02.mp4… adındaki sayıya göre kopyalar
+node seslendir.js <is>
+node video-yap.js <is>
+```
+
+- `SAHNE-LISTESI.md`'yi kullanıcıya göster: hangi paragrafın klibi eksik. Klip promptu isterse her paragraf için ayrı yaz.
+- Kısa klip: `konu.json › klipUzat` = `dondur` (varsayılan) | `dongu` | `yavaslat`. Uzun klip kesilir.
+- Senaryo sonradan değişirse: `node klip-hazirla.js <is> --yeniden` (klipler yerinde kalır; paragraf sayısı değiştiyse klipleri doğru klasöre taşı).
+
 ## 2. AI influencer (Ai Infapp) — HTTP API ile
 
 **Sunucu:** önce `GET http://127.0.0.1:4200/api/durum` dene; yanıt veriyorsa zaten çalışıyordur, yenisini başlatma.

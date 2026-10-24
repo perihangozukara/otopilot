@@ -65,6 +65,22 @@ async function ana(argv) {
     if (!/^[+-]\d{1,2}%$/.test(String(hiz)))
       throw new ortak.OrtakHata("hiz_gecersiz", "Ses hızı geçersiz: " + hiz, { cikis: 2, cozum: "+7% ya da -10% gibi yaz." });
 
+    // Otopilot'a daha önce VoxCPM2 ile üretilen paragraf WAV'ları verildiyse bunları
+    // kullan; hazır WAV varken Edge/Azure/Piper ile üstüne yazma.
+    const hazirDizin = require("path").join(dizin, "Voice", "hazir");
+    const hazirWavVar = fs.existsSync(hazirDizin) && fs.readdirSync(hazirDizin).some(f => /^\d+\.wav$/i.test(f));
+    if (hazirWavVar && typeof bayrak.motor !== "string") {
+      if (bayrak.yeniden)
+        throw new ortak.OrtakHata("voxcpm2_yeniden", "Hazır WAV'lar bulundu; Edge yeniden üretimi yapılmadı.", {
+          cikis: 2, cozum: "VoxCPM2 sesini yenilemek için: node voxcpm2-seslendir.js " + is + " --yeniden. Hazır WAV'ları kullanmak için --yeniden olmadan çalıştır." });
+      const r = require("./lib/ses-hazir.js").kullan(dizin, dil);
+      if (r) {
+        ortak.sonuc({ paragrafSayisi: r.paragrafSayisi, toplamSn: r.toplamSn, motor: r.motor, ses: r.ses,
+          hedefSn: k.hedefSaniye || null, sapmaYuzde: null });
+        return;
+      }
+    }
+
     const r = await seslendir({
       dizin, ses, hiz, dil,
       motorSecimi: typeof bayrak.motor === "string" ? bayrak.motor : (k.sesMotoru || "otomatik"),

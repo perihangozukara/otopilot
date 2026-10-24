@@ -85,3 +85,12 @@ video-indirici/kesfet-veri.json
 
 # Egitim PDF isareti: panel egitim PDF lerini masaustune bir kez indirir (lib/egitim.js)
 .egitim-indirildi
+
+# elle alinan yedekler ve Python onbellegi (git gecmisi tutar)
+eski/
+__pycache__/
+
+# bu bilgisayara ozel yollar ve kisisel is dosyalari (GitHub fork'una girmez)
+yerel-ayar.json
+lt02-*
+*-LT02.bat

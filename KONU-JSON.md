@@ -34,7 +34,13 @@ Panel her yazmadan önce `konu.json.bak` yedeği alır. Bilinmeyen alanlar korun
 | `acilisStili` | `hizli` · `sinematik` | — | Yalnızca bilgi amaçlı; bağlayıcı olan yukarıdaki **sayısal** alanlardır. Yeni uzun video `hizli` ile açılır (0/0/0/12 + `markaKose` 2); `sinematik` 5/10/3/12. İlk kelime ne kadar geç gelirse izleyici o kadar çok kaybedilir. |
 | `gecis` | 29 geçiş adı (aşağıda) | rotasyon / `dissolve` | xfade geçiş türü. |
 | `gecisSure` | 0.2–4 sn | long 0.8 · dikey 0.4 | Geçiş süresi. |
-| `efekt` | `zoom` `yavas` `hizli` `kaydir` `yok` | rotasyon | Hareket efekti. |
+| `efekt` | `zoom` `yavas` `hizli` `kaydir` `yok` | rotasyon | Hareket efekti (yalnız görsellere; video kliplere uygulanmaz). |
+| `klipUzat` | `dondur` `dongu` `yavaslat` | `dondur` | Video klip sahneden **kısaysa**: son kareyi tut / baştan tekrar oynat / sahneye yay (en çok 2 kat yavaş). Uzun klip her zaman baştan kesilir. Bkz. `klip-hazirla.js`. |
+| `klipTamOynat` | true/false | false | `true` → video klip **kesilmez**: yalnız klip içeren bir sahnenin anlatımı kliplerin kendi toplam süresinden kısaysa, sahnenin son paragrafının arkasına sessizlik eklenir ve klip sonuna kadar oynar (anlatım uzunsa `klipUzat` geçerli; `yavaslat` önerilir). Görsel+klip karışık sahnede ve manifestsiz işte uygulanmaz. |
+| `ortamSesi` | 0–1 | 0 (kapalı) | Video kliplerin **kendi sesi** ortam sesi olarak eklenir: klip görüntüyle aynı yere ve hızla oturtulur, anlatım sırasında kısılır, anlatım bitince duyulur. 0.5 ≈ anlatımın ~10 dB altı. Sesi olmayan klip atlanır. |
+| `cumleEs` | 0–3 sn | 0.6 | VoxCPM2 (`voxcpm2-seslendir.js`): her cümle ayrı üretilir, aralarına bu kadar sessizlik konur. Cümle zamanları `kelimeler.json`'a yazılır (altyazı cümleye oturur). Değişirse `--yeniden` gerekir. |
+| `altyaziGorunum` | nesne | kalın Arial, konturlu | Gömülü altyazının görünümü: `font` (ör. `"Georgia"`), `boyut` (8–40; libass 288 ölçeği, 1080p'de 1 ≈ 3,75 px; yatay varsayılan 22), `kalin` (true/false), `serit` (true → yarı saydam koyu şerit), `seritOpaklik` (0–1, varsayılan 0.55), `kenar` (alttan boşluk, 0–150; yatay varsayılan 55). Lara & Tikky: `{"font":"Georgia","boyut":19,"kalin":false,"serit":true,"kenar":28}`. |
+| `paragrafEs` | 0–3 sn | 1 (cümle cümle üretimde) · 0.35 (eski üretimde) | Hazır WAV'larda (VoxCPM2) paragraflar arası sessizlik. Ses yeniden üretilmeden değişir. |
 | `renk` | `sinematik` `sicak` `soguk` `canli` `siyahbeyaz` `yok` | rotasyon | Renk tonu. |
 | `vurguRenk` | 6 haneli hex, `#` yok | `6FD8FF` | Intro/kapanış vurgu rengi. |
 | `outroMetni` | `{baslik, alt, altSlogan}` her biri ≤80 | dile göre | Kapanış kartı metni. Varsayılan en: `SUBSCRIBE` / `TURN ON NOTIFICATIONS` / `New videos every week`; tr: `ABONE OL` / `BİLDİRİMLERİ AÇ` / `Her hafta yeni videolar`; diğer diller en. |

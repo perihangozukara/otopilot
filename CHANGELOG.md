@@ -2,6 +2,32 @@
 
 Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümler [SemVer](https://semver.org/lang/tr/).
 
+## [Unreleased] — 2026-10-22 — VoxCPM2 hazır ses entegrasyonu
+
+### Eklenenler
+- **`konu.json › klipTamOynat`** (true/false): anlatım klipten kısaysa klip kesilmez; sahnenin son paragrafının arkasına sessizlik eklenir (anlatım sesi, altyazı ve paragraf zamanları buna göre kayar), klip sonuna kadar oynar. Yalnız video klip içeren sahnede; birden çok klipte sahne kliplerin süreleri oranında bölünür.
+- **`konu.json › ortamSesi`** (0–1): video kliplerin kendi sesi yeni bir ortam izi olarak karışıma girer (`lib/render-ortam.js`); görüntüyle aynı yere ve hıza oturtulur, anlatım sırasında sidechain ile kısılır, anlatım bitince duyulur.
+- `voxcpm2-seslendir.js`: `konu.json › okunus` sözlüğü yalnız VoxCPM2'ye giden metne uygulanır (altyazı özgün kalır); okunuş değişince sesler güncel sayılmaz.
+
+### Düzeltilenler
+- Video klip değişince (aynı adla yeniden üretilen sahne) final video "güncel" sanılıp yeniden kurulmuyordu: final imzasına klip dosyaları ve `klipUzat` eklendi.
+- `voxcpm2-seslendir.js <iş>` + `voxcpm2-seslendir.py`: Lara & Tikky'nin seçili referans sesiyle paragraf başına WAV üretir; mevcut VoxCPM2 Python ortamını kullanır, metin eşleşmesini kaydeder, `--yeniden` ile güvenli yenileme yapar.
+- `Voice/hazir/001.wav…` desteği: `seslendir.js` bu dosyaları bulursa Edge'i çalıştırmaz; gerçek WAV sürelerinden `zamanlama.json` kurulur. Render WAV'ları kullanır; kelime zamanları yoksa altyazı metin uzunluğuna göre dağıtılır.
+
+## [1.3.0] — 2026-10-22 — Video klip desteği
+
+Sahne klasörlerine artık yalnız görsel değil **video klip** (`mp4`, `mov`, `webm`, `mkv`, `m4v`) da konabilir: animasyon, AI video (Flow, Veo, Vibes…) ya da kendi çekimin. Görsel ve klip aynı videoda karışık kullanılabilir. Yeni npm bağımlılığı yok.
+
+### Eklenenler
+- **`klip-hazirla.js <iş>`**: stok görsel aramadan, senaryodaki **her paragraf için bir sahne klasörü** (`Visuals/NNN-ilk-kelimeler/`) ve `manifest.json` (`klipModu: true`) yazar; `SAHNE-LISTESI.md` hangi klasöre hangi paragrafın klibinin gireceğini ve boş sahneleri gösterir. `--kaynak <klasör>`: dosyaları **adındaki ilk sayıya** göre sahnelere kopyalar (`01.mp4`, `2-orman.mov` → 1., 2. sahne; orijinallere dokunmaz; `.crdownload`/`.part` yarım indirmeler atlanır). `--yeniden`: senaryo değiştiyse manifesti yeniden yazar, klasörlerdeki dosyalara dokunmaz.
+- **Video klip render'ı**: sahne süresi yine o paragrafın gerçek ses süresidir. Uzun klip baştan kesilir; kısa klip `konu.json › klipUzat` ile uzatılır: `dondur` (varsayılan, son kare tutulur), `dongu` (baştan tekrar), `yavaslat` (en çok 2 kat yavaşlar, yetmezse son kareyle tamamlanır). Klibe zoom/kaydır efekti uygulanmaz (hareketli görüntüde titrer); renk tonu, çözünürlük (dikey klip 16:9'a kırpılır) ve geçişler diğer sahnelerle aynıdır. Klibin kendi sesi alınmaz.
+- Klip içeren sahne parçalara bölünmez (aynı klip baştan tekrar oynayıp "geri sarılmış" görünmesin).
+- Klipler `ffprobe` ile doğrulanır (görüntü akışı ve süre); bozuk/yarım klip atlanır ve uyarılır, yerine komşu sahnenin medyası konur.
+
+### Değişenler
+- `gorsel-bul.js` `klipModu` manifestli işte stok görsel aramaz (panel zinciri de) ve bunu söyler; yine de aramak için `--stok`.
+- `RENDER` imzasına klip kipi eklendi: `klipUzat` değişince yalnız ilgili klipler yeniden üretilir.
+
 ## [1.2.0] — 2026-10-15 — Ai Infapp birleştirildi
 
 Ayrı bir proje olan **Ai Infapp** (AI influencer, fotoroman, Etsy baskı tasarımı ve reklam stüdyosu; sıfır bağımlılıklı Node sunucusu) `ai-infapp/` klasörü olarak bu depoya alındı: tek depo, tek ürün. `video-indirici/` ile aynı kalıptır: kendi sunucusu olan bir alt klasör, panelden düğmeyle başlar. Masaüstü uygulaması yoktur; her şey yerelde, `127.0.0.1` üzerinde çalışan web paneli olarak kalır. Yeni npm bağımlılığı eklenmedi.

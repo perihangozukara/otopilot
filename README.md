@@ -127,6 +127,7 @@ Panelle birlikte gelen **Ai Infapp** ve **video indirici** de kendi sunucularıd
 node yeni-is.js <is-adi> --baslik "Başlık" --dil tr --format short   # iş açar (panelle aynı çekirdek)
 node senaryo-claude.js <is-adi>      # ya da: node senaryo-yaz.js <is-adi>   (vidIQ)
 node gorsel-bul.js     <is-adi>      # (+ --yeniden | --sahne 3 --ara "ifade" | --limit-bekle 3600 | --uretme | --arsiv-temizle)
+node voxcpm2-seslendir.js <is-adi>   # Lara & Tikky seçili VoxCPM2 profili; (+ --yeniden)
 node seslendir.js      <is-adi>      # (+ --yeniden | --motor azure | --test ornek.mp3)
 node video-yap.js      <is-adi>      # (+ --yeniden --temiz --tut --onizleme=25)
 node kapak-yap.js      <is-adi>      # kapak resmi (video-yap sonunda kendisi de dener)
@@ -146,11 +147,13 @@ node yayin-paketi.js   <is-adi>      # açıklama, bölümler, atıflar (video-y
 | `PANEL.bat` / `panel.js` | kontrol paneli (bu belgenin kurulum ve akış bölümleri) |
 | `yeni-is.js` | panelsiz iş açar |
 | `senaryo-claude.js`, `senaryo-yaz.js` | senaryo (Claude / vidIQ); bölüm bölüm, iddia raporu (`IDDIA-RAPORU.md`), görsel arama ifadeleri. `senaryo-claude.js` bayrakları: `--yedek` (Claude servis hatası verirse vidIQ ile dene), `--iddia-yok` (ikinci geçişi atla, ucuzlar), `--anahtar-test` (token harcamayan anahtar testi), `--model X` |
+| `klip-hazirla.js` | kendi video kliplerin için paragraf başına sahne klasörü + `SAHNE-LISTESI.md`; `--kaynak <klasör>` numaralı dosyaları sahnelere kopyalar, `--yeniden` (bkz. "Kendi video kliplerinle") |
 | `gorsel-bul.js` | senaryodan görsel bulur; manifest + lisans + atıf; artımlı (silinen görsel geri gelmez). `--yeniden`, `--sahne N --ara "ifade"` (yeni arama sonuç vermezse eski görseller geri konur), `--limit-bekle sn`, `--uretme` (AI yedeğini kapat), `--arsiv-temizle` (`Visuals/_eski-…` arşivleri hiçbir zaman kendiliğinden silinmez; bu bayrak yalnızca en yeni 2 arşivi bırakır) |
 | `gorsel-cek.js`, `portre-cek.js` | NASA görselleri, kişi portreleri (kamu malı/CC kaynaklar) |
 | `gorsel-uret.js` | AI görsel üretimi (soyut sahneler için) |
+| `voxcpm2-seslendir.js` | seçili VoxCPM2 sesinden paragraf başına WAV üretir; yerel VoxCPM2 Python ortamı ve FFmpeg gerekir |
 | `formul-kart.js`, `prompt-kart.js` | `konu.json`'da elle tanımlanan formül/prompt kartları (`hedef` = sahne klasörü; verilmezse en yakın sahneye eklenir) |
-| `seslendir.js` | seslendirme + kelime zamanları (`zamanlama.json`); `--test` ile 5 sn örnek |
+| `seslendir.js` | seslendirme + kelime zamanları (`zamanlama.json`); `Voice/hazir/*.wav` varsa bunları kullanır ve Edge'i atlar; `--test` ile 5 sn örnek |
 | `video-seslendir.js` | **kendi/izinli** bir videoya anlatım + altyazı bindirir |
 | `video-yap.js` | kurgu ve render; `.part` + imzalı önbellek |
 | `kapak-yap.js`, `yayin-paketi.js` | kapak resmi, açıklama/bölümler/atıflar/uyum notu |
@@ -175,6 +178,21 @@ node toplu-uret-uzun.cjs   senaryolar.json     # uzun video
 ```
 
 Manifest bir iş dizisidir ya da `{ "kanal": "AD", "varsayilan": { "dil": "tr" }, "isler": [ … ] }`. Öğe: `{ "slug": "021-ornek", "baslik_en": "…", "paragraflar": ["…", "…"] }` (+ isteğe bağlı `kanal`, `ses`, `sesHizi`, `dil`, `hedefSaniye`, `format`). Betik **var olan `konu.json`'ı ve dolu senaryoyu ezmez**, bitmiş videoyu atlar ("bitti" = mp4 var + `.part` yok + süresi okunabiliyor), hata olursa çıkış kodu 1 verir ve tam günlüğü `uretim/_toplu-<tarih>.log` dosyasına yazar. Panelden yapmak için **kuyruk** kullan.
+
+## Kendi video kliplerinle (animasyon, AI video)
+
+Stok görsel yerine kendi kliplerini kullanmak için (Flow/Veo/Vibes klipleri, Blender çıktısı, kendi çekimin):
+
+```bash
+node yeni-is.js bolum-02 --baslik "Bölüm 2" --dil tr --format long --sure 2
+#   senaryoyu yaz: uretim/bolum-02/Voice/SESLENDIRME-TAM-METIN.txt  (her paragraf = bir sahne)
+node klip-hazirla.js bolum-02                          # Visuals/001-…, 002-… klasörleri + SAHNE-LISTESI.md
+node klip-hazirla.js bolum-02 --kaynak "D:\Klipler"     # ya da: 01.mp4, 02.mp4… dosyalarını sahnelere kopyala
+node seslendir.js bolum-02
+node video-yap.js bolum-02
+```
+
+Klip uzunsa kesilir, kısaysa `konu.json › klipUzat` (`dondur` varsayılan · `dongu` · `yavaslat`) ile sahne sonuna kadar uzatılır. Bir sahne klasöründe birden çok dosya (klip ya da görsel) varsa süre aralarında eşit bölünür. Boş sahnede komşu sahnenin medyası kullanılır ve uyarılır. Bu işte `gorsel-bul.js` stok görsel aramaz (`--stok` ile zorlanır).
 
 ## Görseller sahneyle nasıl eşlenir
 
