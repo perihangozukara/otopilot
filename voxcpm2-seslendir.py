@@ -66,6 +66,33 @@ def trim_edges(wav, np, sr: int):
     return wav[max(0, active[0] * win - int(0.03 * sr)):min(len(wav), (active[-1] + 1) * win + int(0.06 * sr))]
 
 
+def tts_of(sentence: str, okunus: dict[str, str]) -> str:
+    # Modele giden cümle: okunuş sözlüğü + (yalnız o kelimede doğrulanmış) nüshasında düzeltmesi.
+    return re.sub(r"(?i)nüshasında", "nüs" + chr(0x200C) + "hasında", apply_okunus(sentence, okunus))
+
+
+def reusable_paragraphs(out: Path, sentence_gap: float, ref_sha: str) -> dict:
+    # Eski üretimdeki her paragraf: (modele giden cümleler) -> (wav yolu, manifest kaydı). Ayar farklıysa boş.
+    try:
+        meta = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if (meta.get("mode") != "reference_continuation" or meta.get("sentence_gap") != sentence_gap
+            or meta.get("reference_sha256") != ref_sha):
+        return {}
+    old_okunus = meta.get("okunus") if isinstance(meta.get("okunus"), dict) else {}
+    found = {}
+    for f in meta.get("files", []):
+        try:
+            p = out / f["name"]
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != f["sha256"]:
+                continue
+            found[tuple(tts_of(s["text"], old_okunus) for s in f["sentences"])] = (p, f)
+        except (KeyError, TypeError):
+            continue
+    return found
+
+
 def split_sentences(text: str) -> list[str]:
     # Her cümle ayrı üretilir; aralarına sessizlik (cümle esi) konur.
     return [s.strip() for s in re.split(r"(?<=[.!?…])\s+", text.strip()) if s.strip()]
@@ -109,9 +136,6 @@ def main() -> int:
     if out.exists() and existing_matches(out, digest, len(items), okunus_digest, args.cumle_es) and not args.yeniden:
         print(f"VoxCPM2 sesleri güncel ({len(items)} paragraf); üretim atlandı.", flush=True)
         return 0
-    if out.exists() and not args.yeniden:
-        raise SystemExit("Voice/hazir içeriği metinle eşleşmiyor. Yeniden üretmek için --yeniden ekle.")
-
     ref = args.referans.resolve()
     if not ref.is_file():
         raise SystemExit(f"Seçilen referans WAV bulunamadı: {ref}")
@@ -127,27 +151,41 @@ def main() -> int:
         raise SystemExit("Referans sesin okunan metni (.json 'text') boş; devam modu için gerekli.")
     # Devam modu: model kayıtlı sesi ve metnini duyar, her cümleyi o konuşmanın devamı gibi okur (duygu ve ton korunur).
     prompt_text = apply_okunus(" ".join(ref_text.split()), okunus)
+    ref_sha = hashlib.sha256(ref.read_bytes()).hexdigest()
+
+    # Metni (okunuş uygulanmış hali) değişmeyen paragrafların sesi eski üretimden kopyalanır; --yeniden hepsini üretir.
+    reuse = {} if args.yeniden else reusable_paragraphs(out, args.cumle_es, ref_sha)
 
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
     import numpy as np
     import soundfile as sf
     import torch
-    from voxcpm import VoxCPM
 
     tmp = Path(tempfile.mkdtemp(prefix="hazir.tmp-", dir=out.parent))
     try:
-        model = VoxCPM.from_pretrained("openbmb/VoxCPM2", load_denoiser=False, optimize=False)
-        sr = model.tts_model.sample_rate
-        files = []
-        gap = np.zeros(int(round(args.cumle_es * sr)), dtype=np.float32)
+        model, sr, gap = None, None, None
+        files, copied = [], 0
         for i, original in enumerate(items, 1):
             raw = tmp / f"{i:03d}.ham.wav"
             target = tmp / f"{i:03d}.wav"
             sentences = split_sentences(" ".join(original.splitlines()))
+            key = tuple(tts_of(s, okunus) for s in sentences)
+            if key in reuse:
+                src, old = reuse[key]
+                shutil.copy2(src, target)
+                entry = dict(old, name=target.name)
+                entry["sentences"] = [dict(m, text=s) for m, s in zip(old["sentences"], sentences)]
+                files.append(entry)
+                copied += 1
+                continue
+            if model is None:
+                from voxcpm import VoxCPM
+                model = VoxCPM.from_pretrained("openbmb/VoxCPM2", load_denoiser=False, optimize=False)
+                sr = model.tts_model.sample_rate
+                gap = np.zeros(int(round(args.cumle_es * sr)), dtype=np.float32)
             parts, words, sentence_meta, pos = [], [], [], 0
             for j, sentence in enumerate(sentences, 1):
-                # Previously verified for one word on VoxCPM2; applied only to that word.
-                tts_text = re.sub(r"(?i)nüshasında", "nüs" + chr(0x200C) + "hasında", apply_okunus(sentence, okunus))
+                tts_text = key[j - 1]
                 print(f"VoxCPM2: paragraf {i}/{len(items)}, cümle {j}/{len(sentences)}", flush=True)
                 torch.manual_seed(1)
                 # Peri 24.10.2026'da 4 denemeden bunu seçti: ses tarifli tek cümle bazen bozuk ve duygusuz çıkıyordu.
@@ -172,7 +210,7 @@ def main() -> int:
             raw.unlink()
             files.append({"name": target.name, "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
                           "sentences": sentence_meta, "words": words})
-        ref_sha = hashlib.sha256(ref.read_bytes()).hexdigest()
+        print(f"VoxCPM2: {len(items) - copied} paragraf üretildi, {copied} paragraf eski sesten kopyalandı.", flush=True)
         (tmp / "manifest.json").write_text(json.dumps({
             "version": 2, "model": "openbmb/VoxCPM2", "voice": ref.stem,
             "mode": "reference_continuation", "sentence_gap": args.cumle_es,
